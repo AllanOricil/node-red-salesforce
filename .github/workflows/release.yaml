@@ -26,8 +26,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Build
-        run: npm build
+      # - name: Test
+      #   run: npm run test
 
       - name: Semantic Release
         env:
