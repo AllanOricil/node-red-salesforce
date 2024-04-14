@@ -1,0 +1,24 @@
+{
+    "name": "node-red-salesforce",
+    "version": "1.2.0",
+    "description": "A set of Node-RED nodes to interact with Salesforce services",
+    "dependencies": {
+        "jsforce": "^1.11.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/salesforce-flowpro/node-red-salesforce.git"
+    },
+    "license": "Apache-2.0",
+    "keywords": [
+        "node-red",
+        "salesforce",
+        "jsforce",
+        "salesforce-flow-pro"
+    ],
+    "node-red": {
+        "nodes": {
+            "salesforce": "salesforce.js"
+        }
+    }
+}

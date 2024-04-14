@@ -1,0 +1,85 @@
+<script type="text/html" data-template-name="salesforce-connection">
+    <div class="form-row">
+        <label for="node-config-input-instance_url"><span data-i18n="salesforce.label.instance_url"></span></label>
+        <i class="fa fa-at"></i> <input type="text" id="node-config-input-instance_url">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-username"><span data-i18n="salesforce.label.username"></span></label>
+        <i class="fa fa-at"></i> <input type="text" id="node-config-input-username">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-password"><span data-i18n="salesforce.label.password"></span></label>
+        <i class="fa fa-at"></i> <input type="text" id="node-config-input-password">
+    </div>
+    <div class="form-row">
+        <label style="margin-left: 20px;" for="node-config-input-connected_app_client_id"><span data-i18n="twitter.label.connected_app_client_id"></span></label>
+        <input type="password" id="node-config-input-connected_app_client_id">
+    </div>
+    <div class="form-row">
+        <label style="margin-left: 20px;" for="node-config-input-connected_app_client_secret"><span data-i18n="twitter.label.connected_app_client_secret"></span></label>
+        <input type="password" id="node-config-input-connected_app_client_secret">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('salesforce-connection', {
+        category: 'config',
+        defaults: {
+            instance_url: { value: "https://login.salesforce.com" }
+        },
+        connection: {
+            username: { type: "password"},
+            password: { type: "password" },
+            connected_app_client_id: {type: "password"},
+            connected_app_client_secret: {type:"password"}
+        },
+        label: function() {
+            return this.instance_url
+        },
+        exportable: false,
+        oneditsave: function() {
+            const inputs = [
+                "username",
+                "password",
+                "connected_app_client_id",
+                "connected_app_client_secret"
+            ];
+            inputs.forEach(function(field) {
+                var v = $("#node-config-input-"+field).val();
+                v = v.trim();
+                $("#node-config-input-"+field).val(v);
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="soql">
+    <div class="form-row">
+        <label for="node-input-salesforce_connection"><i class="fa fa-salesforce"></i> <span data-i18n="salesforce.label.salesforce_connection"></span></label>
+        <input type="text" id="node-input-salesforce_connection">
+    </div>
+    <div class="form-row">
+        <label for="node-input-soql"><i class="fa fa-database"></i> <span id="node-input-soql-label"></span></label>
+        <input type="text" id="node-input-soql">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('soql',{
+        category: 'social-input',
+        color:"#C0DEED",
+        defaults: {
+            connection: {type:"salesforce-connection", required:true },
+            soql: { value: "" },
+        },
+        inputs: 0,
+        outputs: 1,
+        icon: "twitter.png",
+        label: function() {
+            return "soql";
+        },
+        oneditprepare: function() {},
+        oneditsave: function() {}
+    });
+</script>
+
