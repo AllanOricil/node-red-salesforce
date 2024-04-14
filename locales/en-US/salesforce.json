@@ -1,12 +1,12 @@
 {
-    "salesforce": {
-        "label": {
-            "instance_url": "Instance Url",
-            "username": "Username",
-            "password": "Password",
-            "connected_app_client_id": "Connected App Client Id",
-            "connected_app_client_secret": "Connected App Client Secret",
-            "salesforce_connection" : "Connection"
-        }
+  "salesforce": {
+    "label": {
+      "instance_url": "Instance Url",
+      "username": "Username",
+      "password": "Password",
+      "connected_app_client_id": "Connected App Client Id",
+      "connected_app_client_secret": "Connected App Client Secret",
+      "salesforce_connection": "Connection"
     }
+  }
 }
