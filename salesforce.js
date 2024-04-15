@@ -2,45 +2,51 @@ module.exports = function (RED) {
   'use strict';
   var jsforce = require('jsforce');
 
-  function SalesforceConnectionNode(config) {
+  function SalesforceCredentialsNode(config) {
     RED.nodes.createNode(this, config);
     if (
       this.credentials.username &&
       this.credentials.password &&
-      this.credentials.connectedAppClientId &&
-      this.credentials.connectedAppClientSecret
+      this.credentials.connected_app_client_id &&
+      this.credentials.connected_app_client_secret
     ) {
       this.oauth = {
-        loginUrl: this.credentials.instanceUrl,
-        clientId: this.credentials.connectedAppClientId,
-        clientSecret: this.credentials.connectedAppClientSecret,
+        loginUrl: config.instance_url || 'https://login.salesforce.com',
+        clientId: this.credentials.connected_app_client_id,
+        clientSecret: this.credentials.connected_app_client_secret,
       };
 
       this.connection = new jsforce.Connection({
         oauth2: this.oauth,
       });
-
-      var self = this;
-
-      this.connection.login(
-        this.credentials.username,
-        this.credentials.password,
-        function (err, userInfo) {
-          console.log(self.connection.accessToken);
-          console.log(self.connection.instanceUrl);
-          console.log('User ID: ' + userInfo.id);
-          console.log('Org ID: ' + userInfo.organizationId);
-        },
-      );
     }
   }
 
-  RED.nodes.registerType('salesforce-connection', SalesforceConnectionNode, {
-    connection: {
-      username: { type: 'text' },
-      password: { type: 'password' },
-      connected_app_client_id: { type: 'password' },
-      connected_app_client_secret: { type: 'password' },
+  RED.nodes.registerType('salesforce-credentials', SalesforceCredentialsNode, {
+    credentials: {
+      username: { type: 'text', required: true },
+      password: { type: 'password', required: true },
+      connected_app_client_id: { type: 'password', required: true },
+      connected_app_client_secret: { type: 'password', required: true },
     },
   });
+
+  function SalesforceSoqlNode(config) {
+    RED.nodes.createNode(this, config);
+    this.active = true;
+    this.connection = config.connection;
+    this.soql = config.soql || '';
+
+    const connectionConfig = RED.nodes.getNode(this.connection);
+    const credentials = RED.nodes.getCredentials(this.connection);
+
+    if (connectionConfig && connectionConfig.oauth) {
+      this.log(connectionConfig);
+      this.log(credentials);
+    } else {
+      this.error(RED._('salesforce.errors.missingcredentials'));
+    }
+  }
+
+  RED.nodes.registerType('soql', SalesforceSoqlNode);
 };
