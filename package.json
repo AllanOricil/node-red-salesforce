@@ -1,24 +1,60 @@
 {
-    "name": "node-red-salesforce",
-    "version": "1.2.0",
-    "description": "A set of Node-RED nodes to interact with Salesforce services",
-    "dependencies": {
-        "jsforce": "^1.11.1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/salesforce-flowpro/node-red-salesforce.git"
-    },
-    "license": "Apache-2.0",
-    "keywords": [
-        "node-red",
-        "salesforce",
-        "jsforce",
-        "salesforce-flow-pro"
-    ],
-    "node-red": {
-        "nodes": {
-            "salesforce": "salesforce.js"
-        }
+  "name": "node-red-salesforce",
+  "version": "0.0.0",
+  "description": "A set of Node-RED nodes to interact with Salesforce services",
+  "author": "allanoricil <allanoricilcos@outlook.com>",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salesforce-flowpro/node-red-salesforce.git"
+  },
+  "keywords": [
+    "node-red",
+    "salesforce",
+    "jsforce",
+    "salesforce-flow-pro"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier \"**/*.{js,json,html}\" . --check",
+    "format:write": "prettier --write \"**/*.{js,json,html}\" .",
+    "release": "semantic-release"
+  },
+  "dependencies": {
+    "jsforce": "^1.11.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.2.2",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^12.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.0.3",
+    "@semantic-release/npm": "^12.0.0",
+    "@semantic-release/release-notes-generator": "^13.0.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.0.1",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.2.4",
+    "semantic-release": "^23.0.8"
+  },
+  "node-red": {
+    "nodes": {
+      "salesforce": "salesforce.js"
     }
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "npm run format:write",
+      "npm run lint:fix"
+    ],
+    "*.{html,json}": [
+      "npm run format:write"
+    ]
+  }
 }
