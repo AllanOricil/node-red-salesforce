@@ -6,13 +6,7 @@
     </label>
     <input type="text" id="node-input-connection" />
   </div>
-  <div class="form-row">
-    <label for="node-input-api_version">
-      <i class="fa fa-gear"></i>
-      <span data-i18n="salesforce.label.api_version"></span>
-    </label>
-    <input type="text" id="node-input-api_version" />
-  </div>
+  
   <div class="form-row">
     <label for="node-input-soql">
       <i class="fa fa-database"></i>
@@ -29,52 +23,13 @@
     defaults: {
       connection: {value: '',  type: 'salesforce-connection', required: true },
       soql: { value: '', required: true },
-      inputs: { value: 0 },
     },
-    inputs: 0,
+    inputs: 1,
     outputs: 1,
     icon: 'salesforce.png',
-    label: 'Query (SOQL)',
+    label: 'Query',
     oneditprepare: function () {
-      $('#node-input-api_version').typedInput({
-        types: [
-          {
-            value: '60.0',
-            options: [
-              { value: '60.0', label: 'v60.0' },
-              { value: '59.0', label: 'v59.0' },
-              { value: '58.0', label: 'v58.0' },
-              { value: '57.0', label: 'v57.0' },
-              { value: '56.0', label: 'v56.0' },
-              { value: '55.0', label: 'v55.0' },
-              { value: '54.0', label: 'v54.0' },
-              { value: '53.0', label: 'v53.0' },
-              { value: '52.0', label: 'v52.0' },
-              { value: '51.0', label: 'v51.0' },
-              { value: '50.0', label: 'v50.0' },
-              { value: '49.0', label: 'v49.0' },
-              { value: '48.0', label: 'v48.0' },
-              { value: '47.0', label: 'v47.0' },
-              { value: '46.0', label: 'v46.0' },
-              { value: '44.0', label: 'v44.0' },
-              { value: '44.0', label: 'v44.0' },
-              { value: '43.0', label: 'v43.0' },
-              { value: '42.0', label: 'v42.0' },
-              { value: '41.0', label: 'v41.0' },
-              { value: '40.0', label: 'v40.0' },
-              { value: '39.0', label: 'v39.0' },
-              { value: '38.0', label: 'v38.0' },
-              { value: '37.0', label: 'v37.0' },
-              { value: '36.0', label: 'v36.0' },
-              { value: '35.0', label: 'v35.0' },
-              { value: '34.0', label: 'v34.0' },
-              { value: '33.0', label: 'v33.0' },
-              { value: '32.0', label: 'v32.0' },
-              { value: '30.0', label: 'v30.0' },
-            ],
-          },
-        ],
-      });
+
     },
   });
 </script>
