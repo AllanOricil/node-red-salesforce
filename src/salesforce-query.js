@@ -18,13 +18,19 @@ module.exports = function (RED) {
     //   this.error(RED._('salesforce.errors.missingcredentials'));
     // }
     let node = this;
+
     this.on('input', function(msg, send, done) {
-
-        msg.payload = "succes";
-        send(msg);
-    
-
-        done();
+      let query; 
+      // use msg query if SOQL, otherwise use node query
+      if (typeof msg.payload === 'string' && msg.payload.trim().toLowerCase().startsWith("select")) {
+        query = msg.payload;
+      }else {
+        query = config.query
+      }
+      msg.query = query; 
+      msg.payload = `Executing query: ${query}`
+      send(msg);
+      done();
     });
 
 
