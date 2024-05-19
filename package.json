@@ -45,7 +45,8 @@
   },
   "node-red": {
     "nodes": {
-      "salesforce": "salesforce.js"
+      "salesforce-connection": "src/salesforce-connection.js", 
+      "salesforce-query": "src/salesforce-query.js"
     }
   },
   "lint-staged": {
