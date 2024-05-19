@@ -2,7 +2,7 @@ module.exports = function (RED) {
   'use strict';
   var jsforce = require('jsforce');
 
-  function SalesforceCredentialsNode(config) {
+  function SalesforceConnectionNode(config) {
     RED.nodes.createNode(this, config);
     if (
       this.credentials.username &&
@@ -22,7 +22,7 @@ module.exports = function (RED) {
     }
   }
 
-  RED.nodes.registerType('salesforce-credentials', SalesforceCredentialsNode, {
+  RED.nodes.registerType('salesforce-connection', SalesforceConnectionNode, {
     credentials: {
       username: { type: 'text', required: true },
       password: { type: 'password', required: true },
@@ -31,22 +31,5 @@ module.exports = function (RED) {
     },
   });
 
-  function SalesforceSoqlNode(config) {
-    RED.nodes.createNode(this, config);
-    this.active = true;
-    this.connection = config.connection;
-    this.soql = config.soql || '';
 
-    const connectionConfig = RED.nodes.getNode(this.connection);
-    const credentials = RED.nodes.getCredentials(this.connection);
-
-    if (connectionConfig && connectionConfig.oauth) {
-      this.log(connectionConfig);
-      this.log(credentials);
-    } else {
-      this.error(RED._('salesforce.errors.missingcredentials'));
-    }
-  }
-
-  RED.nodes.registerType('soql', SalesforceSoqlNode);
 };
