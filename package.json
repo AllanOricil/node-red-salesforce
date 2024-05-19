@@ -45,6 +45,7 @@
   },
   "node-red": {
     "nodes": {
+      "salesforce-connection": "src/salesforce-connection.js", 
       "salesforce-query": "src/salesforce-query.js"
     }
   },

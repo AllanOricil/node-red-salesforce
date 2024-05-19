@@ -19,17 +19,17 @@ module.exports = function (RED) {
       this.error(RED._('salesforce.errors.missingcredentials'));
     }
   }
-
-  this.on('input', function(msg, send, done) {
+//   let node = this; 
+//   this.on('input', function(msg, send, done) {
     
-    console.log(msg);
+//     console.log(msg);
 
-    msg.payload = 'success'; 
+//     msg.payload = 'success'; 
     
-    send(msg); 
+//     send(msg); 
 
-    done();
-});
+//     done();
+// });
 
   RED.nodes.registerType('salesforce-query', SalesforceQueryNode);
 };
