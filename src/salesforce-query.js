@@ -35,7 +35,7 @@ module.exports = function (RED) {
         if (config.outputStyle == 'messageAllRecords' ){
           try {
             let result = await connection.query(query);
-            msg.payload = result;
+            msg = { totalSize: result.totalSize, done: result.done, payload: result.records};
             send(msg);
             done();
           } catch (error) {
