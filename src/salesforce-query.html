@@ -39,6 +39,7 @@
           <option value="inStream">End message in stream</option>
           <option value="inNodeOutput">End message in seperate node output</option>
       </select>
+      <input type="hidden" id="node-input-outputs"/>
     </div>
 </script>
 
@@ -51,9 +52,13 @@
       query: {value: 'Select Id From Account LIMIT 1'},
       outputStyle: {value:"messageAllRecords", required:true}, // Default to 'allRecords'
       endMessage: {value:"none", required:true}, // Default to "none"
+      outputs: {value: 1} // Default output count 1, when message per record and "inNodeOutput" create additional output
     },
     inputs: 1,
+    // https://groups.google.com/g/node-red/c/-PalQmoKIKY
     outputs: 1,
+    outputLabels: ["Record Output", "End Message Output"],
+
     icon: 'salesforce.png',
     label: 'Query',
     oneditprepare: function () {
@@ -63,23 +68,29 @@
         mode: 'ace/mode/sql',
         value: this.query
      });
-           // Function to toggle the visibility of the end message select based on the output style
-           function toggleEndMessageVisibility() {
-            var outputStyle = $('#node-input-outputStyle').val();
-            if (outputStyle === 'messagePerRecord') {
-              $('#node-input-endMessage').closest('.form-row').show();
-            } else {
-              $('#node-input-endMessage').closest('.form-row').hide();
-            }
-          }
-    
-          // Set initial visibility state of the end message options
-          toggleEndMessageVisibility();
-    
-          // Attach change event to the output style dropdown to control the visibility dynamically
-          $('#node-input-outputStyle').on('change', function() {
-            toggleEndMessageVisibility();
-          });
+      // Function to toggle the visibility of the end message select based on the output style
+      function toggleEndMessageVisibilityAndOutput() {
+      var outputStyle = $('#node-input-outputStyle').val();
+      var endMessage = $('#node-input-endMessage').val();
+      if (outputStyle === 'messagePerRecord') {
+        $('#node-input-endMessage').closest('.form-row').show();
+      } else {
+        $('#node-input-endMessage').closest('.form-row').hide();
+      }
+      if (outputStyle === 'messagePerRecord' && endMessage === 'inNodeOutput') {
+        $("#node-input-outputs").val(2);
+      } else {
+        $("#node-input-outputs").val(1);
+      }
+    }
+    // Set initial visibility state of the end message options
+    toggleEndMessageVisibilityAndOutput();
+
+    // Attach change event to the outputStyle and Endmessage  dropdown to control the visibility and output dynamically
+    $('#node-input-outputStyle, #node-input-endMessage').on('change', function() {
+      toggleEndMessageVisibilityAndOutput();
+    });
+
     },
     oneditsave: function() {
       this.query = this.editor.getValue();
