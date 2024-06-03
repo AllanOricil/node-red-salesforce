@@ -57,13 +57,11 @@ module.exports = function (RED) {
               })
               .on("end", () => {
                 console.log("Query completed. Total records fetched:", stream.totalFetched);
-                // Output endmessage in stream
-                if (config.endMessage == 'inStream' ){
                 let endMsg = RED.util.cloneMessage(msg);
                 endMsg = { totalSize: stream.totalSize, totalFetched: stream.totalFetched, payload: "Done" };
-                send(endMsg); // Optionally send a message at the end of the stream
+                // Output endmessage in stream or in seperate output node or null (none, no endmessage)
+                send(config.endMessage == 'inNodeOutput' ? [null, endMsg] : (config.endMessage == 'inStream' ? endMsg : null));
                 done(); // Call done only when the stream ends
-                }; 
               })
               .on("error", (err) => {
                 node.error("Error during Salesforce query stream: " + err, msg);
