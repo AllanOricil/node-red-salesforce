@@ -54,8 +54,7 @@
       endMessage: {value:"none", required:true}, // Default to "none"
       outputs: {value: 1} // Default output count 1, when message per record and "inNodeOutput" create additional output
     },
-    inputs: 1,
-    // https://groups.google.com/g/node-red/c/-PalQmoKIKY
+    inputs: 1, // gets updated dynamically when 'endMessage inNodeOutput'
     outputs: 1,
     outputLabels: ["Record Output", "End Message Output"],
 
@@ -70,18 +69,12 @@
      });
       // Function to toggle the visibility of the end message select based on the output style
       function toggleEndMessageVisibilityAndOutput() {
-      var outputStyle = $('#node-input-outputStyle').val();
-      var endMessage = $('#node-input-endMessage').val();
-      if (outputStyle === 'messagePerRecord') {
-        $('#node-input-endMessage').closest('.form-row').show();
-      } else {
-        $('#node-input-endMessage').closest('.form-row').hide();
-      }
-      if (outputStyle === 'messagePerRecord' && endMessage === 'inNodeOutput') {
-        $("#node-input-outputs").val(2);
-      } else {
-        $("#node-input-outputs").val(1);
-      }
+        var outputStyle = $('#node-input-outputStyle').val();
+        var endMessage = $('#node-input-endMessage').val();
+        // toggle endmessage field when messagePerRecord
+        $('#node-input-endMessage').closest('.form-row').toggle(outputStyle === 'messagePerRecord');
+        // update Node output value
+        $("#node-input-outputs").val(outputStyle === 'messagePerRecord' && endMessage === 'inNodeOutput' ? 2 : 1);
     }
     // Set initial visibility state of the end message options
     toggleEndMessageVisibilityAndOutput();
