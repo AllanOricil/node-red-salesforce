@@ -49,10 +49,14 @@ module.exports = function (RED) {
           try {
             // Start the query and set up the stream handlers
             let stream = connection.query(query)
-              .on("record", (record) => {
+              .on("record", async (record) => {
                 let newMsg = RED.util.cloneMessage(msg); // Clone the message for each record
-                newMsg = { totalSize: stream.totalSize, totalFetched: stream.totalFetched };
-                newMsg.payload = record;
+                newMsg = { totalSize: stream.totalSize, totalFetched: stream.totalFetched, payload: record };
+                // delay between emitting each record in ms, set in node config
+                // setTimeout(() => {
+                //   send(newMsg);
+                // }, config.delay); 
+                // await new Promise(resolve => setTimeout(resolve, config.delay));
                 send(newMsg);
               })
               .on("end", () => {
@@ -67,7 +71,7 @@ module.exports = function (RED) {
                 node.error("Error during Salesforce query stream: " + err, msg);
                 done(); // Ensure done is also called on error
               })
-              .run({ autoFetch : true, maxFetch : 4000 }); // This actually starts the query stream
+              .run({ autoFetch : true, maxFetch : config.maxFetch  }); // This actually starts the query stream
           } catch (error) {
             node.error("Error setting up Salesforce query stream: " + error.message, msg);
             done();
