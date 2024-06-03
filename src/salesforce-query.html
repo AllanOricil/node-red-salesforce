@@ -1,0 +1,69 @@
+<script type="text/html" data-template-name="salesforce-query">
+  <div class="form-row">
+    <label for="node-input-connection">
+      <i class="fa fa-sitemap"></i>
+      <span data-i18n="salesforce.label.salesforce_connection"></span>
+    </label>
+    <input type="text" id="node-input-connection" />
+  </div>
+  
+  <!-- <div class="form-row">
+    <label for="node-input-soql">
+      <i class="fa fa-database"></i>
+      <span id="node-input-soql-label" data-i18n="salesforce.label.soql"></span>
+    </label>
+    <input type="text" id="node-input-query" />
+  </div> -->
+
+  <div class="form-row node-text-editor-row">
+    <label for="node-input-soql">
+      <i class="fa fa-database"></i>
+      <span id="node-input-soql-label" data-i18n="salesforce.label.soql">SOQL Query</span>
+    </label>
+  <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-query_editor"></div>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-outputStyle">
+        <i class="fa fa-random"></i>
+        <span>Output Style</span>
+    </label>
+    <select id="node-input-outputStyle">
+        <option value="messageAllRecords" selected>1 Message all records (default)</option>
+        <option value="messagePerRecord">Message for each record</option>
+    </select>
+</div>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('salesforce-query', {
+    category: 'sf',
+    color: '#FFFFFF',
+    defaults: {
+      connection: {value: '',  type: 'salesforce-connection'},
+      query: {value: 'Select Id From Account LIMIT 1'},
+      outputStyle: {value:"messageAllRecords", required:true}, // Default to 'allRecords'
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'salesforce.png',
+    label: 'Query',
+    oneditprepare: function () {
+      this.editor = RED.editor.createEditor({
+        id: 'node-input-query_editor',
+        mode: 'ace/mode/sql',
+        value: this.query
+     });
+    },
+    oneditsave: function() {
+      this.query = this.editor.getValue();
+      this.editor.destroy();
+      delete this.editor;
+  },
+  oneditcancel: function() {
+      this.editor.destroy();
+      delete this.editor;
+  },
+  
+  });
+</script>

@@ -31,11 +31,34 @@ module.exports = function (RED) {
 
         // set the query to the message for later reference in a flow
         msg.query = query; 
-        // Do the actual query 
-        let result = await connection.query(query);
-  
-        msg.payload = result; 
-        send(msg);
+
+        // Output Style "messageAllRecords" do Query and return records
+        if (config.outputStyle == 'messageAllRecords' ){
+          let result = await connection.query(query);
+    
+          msg.payload = result; 
+          send(msg);
+        }
+
+        // Output Style "messagePerRecord" do Query and return records
+        if (config.outputStyle == 'messagePerRecord' ){
+          // let result = await connection.query(query);
+          const records = [];
+          let stream = await connection.query(query)
+            .on("record", (record) => {
+              let newMsg = RED.util.cloneMessage(msg); // Clone the message for each record
+              newMsg.payload = record;
+              send(newMsg);
+            })
+            .on("end", () => {
+              console.log("total in database : " + query.totalSize);
+              console.log("total fetched : " + query.totalFetched);
+            })
+            .on("error", (err) => {
+              node.error(err);
+            })
+            .run({ autoFetch : true, maxFetch : 4000 }); 
+        }
       } catch (error) {
         node.error("Error executing Salesforce query: " + error.message, msg);
       }
