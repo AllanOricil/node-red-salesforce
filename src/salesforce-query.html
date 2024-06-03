@@ -1,4 +1,5 @@
 <script type="text/html" data-template-name="salesforce-query">
+  <!-- Connection selection -->
   <div class="form-row">
     <label for="node-input-connection">
       <i class="fa fa-sitemap"></i>
@@ -7,14 +8,7 @@
     <input type="text" id="node-input-connection" />
   </div>
   
-  <!-- <div class="form-row">
-    <label for="node-input-soql">
-      <i class="fa fa-database"></i>
-      <span id="node-input-soql-label" data-i18n="salesforce.label.soql"></span>
-    </label>
-    <input type="text" id="node-input-query" />
-  </div> -->
-
+  <!-- SOQL editor -->
   <div class="form-row node-text-editor-row">
     <label for="node-input-soql">
       <i class="fa fa-database"></i>
@@ -23,6 +17,7 @@
   <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-query_editor"></div>
   </div>
 
+  <!-- Output style -->
   <div class="form-row">
     <label for="node-input-outputStyle">
         <i class="fa fa-random"></i>
@@ -32,7 +27,19 @@
         <option value="messageAllRecords" selected>1 Message all records (default)</option>
         <option value="messagePerRecord">Message for each record</option>
     </select>
-</div>
+  </div>
+    <!-- Output style -->
+    <div class="form-row">
+      <label for="node-input-endMessage">
+          <i class="fa fa-flag-checkered"></i>
+          <span>End Message</span>
+      </label>
+      <select id="node-input-endMessage">
+          <option value="none" selected>None (default)</option>
+          <option value="inStream">End message in stream</option>
+          <option value="inNodeOutput">End message in seperate node output</option>
+      </select>
+    </div>
 </script>
 
 <script type="text/javascript">
@@ -43,17 +50,36 @@
       connection: {value: '',  type: 'salesforce-connection'},
       query: {value: 'Select Id From Account LIMIT 1'},
       outputStyle: {value:"messageAllRecords", required:true}, // Default to 'allRecords'
+      endMessage: {value:"none", required:true}, // Default to "none"
     },
     inputs: 1,
     outputs: 1,
     icon: 'salesforce.png',
     label: 'Query',
     oneditprepare: function () {
+      // Editor 
       this.editor = RED.editor.createEditor({
         id: 'node-input-query_editor',
         mode: 'ace/mode/sql',
         value: this.query
      });
+           // Function to toggle the visibility of the end message select based on the output style
+           function toggleEndMessageVisibility() {
+            var outputStyle = $('#node-input-outputStyle').val();
+            if (outputStyle === 'messagePerRecord') {
+              $('#node-input-endMessage').closest('.form-row').show();
+            } else {
+              $('#node-input-endMessage').closest('.form-row').hide();
+            }
+          }
+    
+          // Set initial visibility state of the end message options
+          toggleEndMessageVisibility();
+    
+          // Attach change event to the output style dropdown to control the visibility dynamically
+          $('#node-input-outputStyle').on('change', function() {
+            toggleEndMessageVisibility();
+          });
     },
     oneditsave: function() {
       this.query = this.editor.getValue();
