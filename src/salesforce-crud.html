@@ -1,0 +1,48 @@
+<script type="text/html" data-template-name="CRUD">
+  <!-- Connection selection -->
+  <div class="form-row">
+    <label for="node-input-connection">
+      <i class="fa fa-sitemap"></i>
+      <span data-i18n="salesforce.label.salesforce_connection"></span>
+    </label>
+    <input type="text" id="node-input-connection" />
+  </div>
+  
+    <!-- Operation type (CRUD) -->
+    <div class="form-row" >
+      <label for="node-input-operation">
+          <i class="fa fa-flag-checkered"></i>
+          <span>Operation type</span>
+      </label>
+      <select id="node-input-endMessage">
+          <option value="create" selected>Create</option>
+          <option value="read">Read</option>
+          <option value="update">Update</option>
+          <option value="delete">Delete</option>
+      </select>
+    </div>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('CRUD', {
+    category: 'Salesforce',
+    color: '#FFFFFF',
+    defaults: {
+      connection: {value: '',  type: 'salesforce-connection'},
+      operation: {value: 'create'},
+    },
+    inputs: 1, // gets updated dynamically when 'endMessage inNodeOutput'
+    outputs: 1,
+    icon: 'salesforce.png',
+    label: 'CRUD',
+    oneditprepare: function () {
+
+
+    },
+    oneditsave: function() {
+  },
+  oneditcancel: function() {
+  },
+  
+  });
+</script>

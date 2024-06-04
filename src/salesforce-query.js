@@ -83,5 +83,5 @@ module.exports = function (RED) {
   }
 
 
-  RED.nodes.registerType('salesforce-query', SalesforceQueryNode);
+  RED.nodes.registerType('Query', SalesforceQueryNode);
 };
