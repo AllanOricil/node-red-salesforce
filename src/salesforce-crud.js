@@ -45,7 +45,8 @@ module.exports = function (RED) {
         }
         else if (typeof msg.payload === 'object' && msg.payload !== null) {
             msgInputType = 'object';
-            id =  msg.payload.Id && isValidSalesforceId(msg.payload.Id)?  msg.payload.Id : null; 
+            let extractedId = msg.payload.Id || msg.payload.id
+            id =  extractedId && isValidSalesforceId(extractedId)?  extractedId : null; 
         }
         else if (typeof msg.payload === 'string') {
             msgInputType = 'string';
@@ -60,14 +61,17 @@ module.exports = function (RED) {
       // ***** Create ******
       if (config.operation == 'create' ){
         try{
-          // const account = await connection.sobject(config.sObject).retrieve('0010500000fxR4EAAU')
-          // console.log(`Name: ${account.Name}`)
-        // Single record creation
-        // const ret = await conn.sobject("Account").create({ Name : 'My Account #1' });
-        // console.log(`Created record id : ${ret.id}`);
-
+          let result; 
+          if(msgInputType == 'arrayOfObjects') { // array with records
+            const create = await connection.sobject(config.sObject).create(msg.payload);
+            result = create
+          }else if (msgInputType == 'object' ) { // single record
+            const create = await connection.sobject(config.sObject).create(msg.payload);
+            result = create
+          }
+          msg.payload = result || 'No valid record to create '; 
         }catch (error) {
-          node.error("Error retrieving record CRUD Create operation: " + error.message, msg);
+          node.error("Error CRUD Create operation: " + error.message, msg);
           done();
           }
         };
@@ -81,9 +85,9 @@ module.exports = function (RED) {
           }else if ((msgInputType == 'string' || msgInputType == 'object') && id != null) { // single id in string
             result = await connection.sobject(config.sObject).retrieve(id)
           }
-          msg.payload = result || 'No valid IDs found'; 
+          msg.payload = result || 'No valid IDs to retrieve'; 
         }catch (error) {
-          node.error("Error retrieving record CRUD Read operation: " + error.message, msg);
+          node.error("Error CRUD Read operation: " + error.message, msg);
           done();
           }
         };
