@@ -23,12 +23,11 @@ module.exports = function (RED) {
           done(); // Ensure done is called to signal completion
           return; // Exit the function early
         }
-        // Resolve input message as single record or array and prep for processing (single id versus array with id's)
-        let msgInputType = 'unknown'; // Default 'unkown' means we cant process
+        // Resolve input message as single record or array and prep for processing (single id OR array with id's)
+        let msgInputType = 'unknown'; // Default 'unkown' means no valid ID's found as entry
         let id; // extracted single ID
         let idArray;  // extraced arrays of IDs
         if (Array.isArray(msg.payload)) {
-            // Default to 'arrayOfStrings', and check for the first element type to determine
             let allStrings = msg.payload.every(item => typeof item === 'string');
             let allObjects = msg.payload.every(item => typeof item === 'object' && item !== null && !Array.isArray(item));     
             if (allStrings) {
@@ -36,10 +35,17 @@ module.exports = function (RED) {
                 idArray = msg.payload.filter(isValidSalesforceId); 
             }else if (allObjects) {
                 msgInputType = 'arrayOfObjects';
+                idArray = msg.payload.reduce((result, item) => { // Extract Ids from record objects and validate Ids
+                  if (item.Id && isValidSalesforceId(item.Id)) {
+                      result.push(item.Id);
+                  }
+                  return result;
+                }, []);
             }
         }
         else if (typeof msg.payload === 'object' && msg.payload !== null) {
             msgInputType = 'object';
+            id =  msg.payload.Id && isValidSalesforceId(msg.payload.Id)?  msg.payload.Id : null; 
         }
         else if (typeof msg.payload === 'string') {
             msgInputType = 'string';
@@ -54,8 +60,12 @@ module.exports = function (RED) {
       // ***** Create ******
       if (config.operation == 'create' ){
         try{
-          const account = await connection.sobject(config.sObject).retrieve('0010500000fxR4EAAU')
-          console.log(`Name: ${account.Name}`)
+          // const account = await connection.sobject(config.sObject).retrieve('0010500000fxR4EAAU')
+          // console.log(`Name: ${account.Name}`)
+        // Single record creation
+        // const ret = await conn.sobject("Account").create({ Name : 'My Account #1' });
+        // console.log(`Created record id : ${ret.id}`);
+
         }catch (error) {
           node.error("Error retrieving record CRUD Create operation: " + error.message, msg);
           done();
@@ -65,15 +75,13 @@ module.exports = function (RED) {
         if (config.operation == 'read' ){
         try{
           let result; 
-          if(msgInputType == 'arrayOfStrings' && idArray != null) {
+          if((msgInputType == 'arrayOfStrings' || msgInputType == 'arrayOfObjects') && idArray != null) { // array with ids
             let resultRaw = await connection.sobject(config.sObject).retrieve(idArray)
             result = resultRaw.filter(value => value != null) // remove null values in array (when ID not matching inserted sObject)
-          }else if (msgInputType == 'string' && id != null){
+          }else if ((msgInputType == 'string' || msgInputType == 'object') && id != null) { // single id in string
             result = await connection.sobject(config.sObject).retrieve(id)
           }
           msg.payload = result || 'No valid IDs found'; 
-          node.send(msg);
-          done(); 
         }catch (error) {
           node.error("Error retrieving record CRUD Read operation: " + error.message, msg);
           done();
@@ -107,6 +115,9 @@ module.exports = function (RED) {
           done();
           }
         };
+
+      // Finally 
+      node.send(msg);
       done(); // Ensure done is always called to signal the end of processing
         }); 
 
