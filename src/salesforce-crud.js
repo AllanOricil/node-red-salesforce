@@ -45,7 +45,7 @@ module.exports = function (RED) {
         }
         else if (typeof msg.payload === 'object' && msg.payload !== null) {
             msgInputType = 'object';
-            let extractedId = msg.payload.Id || msg.payload.id
+            let extractedId = msg.payload.Id || msg.payload.id || msg.payload.ID;
             id =  extractedId && isValidSalesforceId(extractedId)?  extractedId : null; 
         }
         else if (typeof msg.payload === 'string') {
