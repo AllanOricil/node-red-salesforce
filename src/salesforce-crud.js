@@ -36,8 +36,9 @@ module.exports = function (RED) {
             }else if (allObjects) {
                 msgInputType = 'arrayOfObjects';
                 idArray = msg.payload.reduce((result, item) => { // Extract Ids from record objects and validate Ids
-                  if (item.Id && isValidSalesforceId(item.Id)) {
-                      result.push(item.Id);
+                  let extractedId = item.Id || item.id || item.ID
+                  if (extractedId && isValidSalesforceId(extractedId)) {
+                      result.push(extractedId);
                   }
                   return result;
                 }, []);
@@ -45,7 +46,7 @@ module.exports = function (RED) {
         }
         else if (typeof msg.payload === 'object' && msg.payload !== null) {
             msgInputType = 'object';
-            let extractedId = msg.payload.Id || msg.payload.id || msg.payload.ID;
+            let extractedId = msg.payload.Id || msg.payload.id || msg.payload.ID; // search for id key in object
             id =  extractedId && isValidSalesforceId(extractedId)?  extractedId : null; 
         }
         else if (typeof msg.payload === 'string') {
