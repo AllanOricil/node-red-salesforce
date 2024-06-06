@@ -57,6 +57,8 @@ module.exports = function (RED) {
         if(msgInputType == 'unkown'){
           node.error('Message input is not an ID, RecordObject, Array of IDs or Array of records. Or not expected format');
         }
+        // set operation type in msg object for downstream use
+        msg.crud_operation = config.operation;
         
 
       // ***** Create ******
@@ -64,13 +66,12 @@ module.exports = function (RED) {
         try{
           let result; 
           if(msgInputType == 'arrayOfObjects') { // array with records
-            const create = await connection.sobject(config.sObject).create(msg.payload);
-            result = create
+            result = await connection.sobject(config.sObject).create(msg.payload);
           }else if (msgInputType == 'object' ) { // single record
-            const create = await connection.sobject(config.sObject).create(msg.payload);
-            result = create
+            result = await connection.sobject(config.sObject).create(msg.payload);
           }
           msg.payload = result || 'No valid record to create '; 
+          node.send(msg);
         }catch (error) {
           node.error("Error CRUD Create operation: " + error.message, msg);
           done();
@@ -87,6 +88,7 @@ module.exports = function (RED) {
             result = await connection.sobject(config.sObject).retrieve(id)
           }
           msg.payload = result || 'No valid IDs to retrieve'; 
+          node.send(msg);
         }catch (error) {
           node.error("Error CRUD Read operation: " + error.message, msg);
           done();
@@ -113,16 +115,22 @@ module.exports = function (RED) {
       // ***** Delete ****** https://jsforce.github.io/document/#delete
       if (config.operation == 'delete' ){
         try{
-          const account = await conn.sobject(config.sobject).retrieve('0010500000fxR4EAAU')
-          console.log(`Name: ${account.Name}`)
+          let result; 
+          if((msgInputType == 'arrayOfStrings' || msgInputType == 'arrayOfObjects') && idArray != null) { // array with ids
+            let resultRaw = await connection.sobject(config.sObject).delete(idArray)
+            result = resultRaw.filter(value => value != null) // remove null values in array (when ID not matching inserted sObject)
+          }else if ((msgInputType == 'string' || msgInputType == 'object') && id != null) { // single id in string
+            result = await connection.sobject(config.sObject).delete(id)
+          }
+          msg.payload = result || 'No valid IDs for records to delete'; 
+          node.send(msg);
         }catch (error) {
-          node.error("Error retrieving record CRUD Delete operation: " + error.message, msg);
+          node.error("Error CRUD Delete operation: " + error.message, msg);
           done();
           }
         };
 
       // Finally 
-      node.send(msg);
       done(); // Ensure done is always called to signal the end of processing
         }); 
 
