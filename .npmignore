@@ -1,0 +1,12 @@
+.github
+.husky
+assets
+src
+.commitlintrc.json
+.eslintignore
+.eslintrc.json
+.gitignore
+.prettierignore
+.prettierrc.json
+esbuild.config.js
+jsconfig.json
