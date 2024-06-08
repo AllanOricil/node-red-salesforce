@@ -2,10 +2,16 @@
   "name": "node-red-salesforce",
   "version": "0.0.0",
   "description": "A set of Node-RED nodes to interact with Salesforce services",
-  "author": "allanoricil <allanoricilcos@outlook.com>",
-  "engines": {
-    "node": ">=20"
+  "author": {
+    "name": "Allan Oricil",
+    "email": "allanoricil@duck.com"
   },
+  "contributors": [
+    {
+      "name": "Riekus Ritskes",
+      "email": "riekusritskes@gmail.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/salesforce-flowpro/node-red-salesforce.git"
@@ -16,13 +22,19 @@
     "jsforce",
     "salesforce-flow-pro"
   ],
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "dist/index.js",
+  "type": "commonjs",
   "scripts": {
     "prepare": "husky",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "lint:fix": "eslint --ext .js --fix .",
     "format": "prettier \"**/*.{js,json,html}\" . --check",
-    "format:write": "prettier --write \"**/*.{js,json,html}\" .",
-    "release": "semantic-release"
+    "format:fix": "prettier --write \"**/*.{js,json,html}\" .",
+    "release": "semantic-release",
+    "build": "node esbuild.config.js"
   },
   "dependencies": {
     "jsforce": "^1.11.1"
@@ -36,26 +48,27 @@
     "@semantic-release/github": "^10.0.3",
     "@semantic-release/npm": "^12.0.0",
     "@semantic-release/release-notes-generator": "^13.0.0",
+    "esbuild": "^0.21.4",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
-    "husky": "^9.0.1",
+    "fs-extra": "^11.2.0",
+    "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
     "prettier": "^3.2.4",
     "semantic-release": "^23.0.8"
   },
   "node-red": {
     "nodes": {
-      "salesforce-connection": "src/salesforce-connection.js", 
-      "salesforce-query": "src/salesforce-query.js"
+      "salesforce": "dist/index.js"
     }
   },
   "lint-staged": {
     "*.{js}": [
-      "npm run format:write",
+      "npm run format:fix",
       "npm run lint:fix"
     ],
     "*.{html,json}": [
-      "npm run format:write"
+      "npm run format:fix"
     ]
   }
 }
