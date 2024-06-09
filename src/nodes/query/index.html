@@ -87,7 +87,7 @@
     category: 'Salesforce',
     color: '#FFFFFF',
     defaults: {
-      connection: { value: '', type: 'salesforce-connection' },
+      connection: { type: 'salesforce-connection', required: true },
       query: { value: 'Select Id From Account LIMIT 1' },
       outputStyle: { value: 'messageAllRecords', required: true }, // Default to 'allRecords'
       endMessage: { value: 'none', required: true }, // Default to "none"

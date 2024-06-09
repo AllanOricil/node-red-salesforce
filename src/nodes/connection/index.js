@@ -3,35 +3,27 @@ import jsforce from 'jsforce';
 export default function (RED) {
   function SalesforceConnectionNode(config) {
     RED.nodes.createNode(this, config);
-    if (
-      this.credentials.username &&
-      this.credentials.password &&
-      this.credentials.connected_app_client_id &&
-      this.credentials.connected_app_client_secret
-    ) {
-      this.oauth = {
-        loginUrl: config.instance_url || 'https://login.salesforce.com',
-        clientId: this.credentials.connected_app_client_id,
-        clientSecret: this.credentials.connected_app_client_secret,
-      };
 
-      this.connection = new jsforce.Connection({
-        oauth2: this.oauth,
-      });
-    }
+    this.oauth2 = {
+      loginUrl: config?.instance_url || 'https://login.salesforce.com',
+      clientId: this.credentials?.connected_app_client_id,
+      clientSecret: this.credentials?.connected_app_client_secret,
+    };
 
-    this.getConnection = async function () {
+    // TODO: pass several parameters to this guy to determine the type of connection it can open
+    this.login = async () => {
       try {
-        console.log(this.oauth);
-        console.log(this.credentials);
+        this.connection = new jsforce.Connection({
+          oauth2: this.oauth2,
+        });
+
         await this.connection.login(
           this.credentials.username,
           this.credentials.password,
         );
         return this.connection;
       } catch (err) {
-        node.error(err);
-        console.log(err);
+        RED.node.error(err);
       }
     };
   }
@@ -46,35 +38,39 @@ export default function (RED) {
   });
 
   // receive "test connection' button click from editor"
-  RED.httpAdmin.post('/test-salesforce-connection', async function (req, res) {
-    const {
-      id,
-      username,
-      password,
-      instance_url,
-      connected_app_client_id,
-      connected_app_client_secret,
-    } = req.body;
-
-    console.log(id);
-
+  RED.httpAdmin.post('/salesforce/connection/test', async function (req, res) {
     try {
-      let connection = new jsforce.Connection({
-        oauth2: {
-          loginUrl: instance_url,
-          clientId: connected_app_client_id,
-          clientSecret: connected_app_client_secret,
-        },
-      });
+      const salesforceConnectionNode = RED.nodes.getNode(req.body.id);
 
-      await connection.login(username, password);
-      RED.log.info('Salesforce connection successful!');
-      res
-        .status(200)
-        .json({ status: 'success', message: 'Connection successful' });
+      if (
+        salesforceConnectionNode?.oauth2?.loginUrl &&
+        salesforceConnectionNode?.oauth2?.clientId &&
+        salesforceConnectionNode?.oauth2?.clientSecret
+      ) {
+        RED.log.info(
+          `using deployed salesforce connection node: ${salesforceConnectionNode.name || salesforceConnectionNode.id}`,
+        );
+        await salesforceConnectionNode.login();
+      } else {
+        // TODO: add ajv to validate req body
+        const connection = new jsforce.Connection({
+          oauth2: {
+            loginUrl: req.body.instance_url,
+            clientId: req.body.connected_app_client_id,
+            clientSecret: req.body.connected_app_client_secret,
+          },
+        });
+
+        await connection.login(req.body.username, req.body.password);
+      }
     } catch (err) {
-      RED.log.warn('Salesforce connection failed: ' + err.message);
-      res.status(500).json({ status: 'error', message: err.message });
+      RED.log.error('Salesforce connection failed: ' + err.message);
+      return res.status(500).json({ status: 'error', message: err.message });
     }
+
+    RED.log.info('Salesforce connection successful!');
+    res
+      .status(200)
+      .json({ status: 'success', message: 'Connection successful' });
   });
 }

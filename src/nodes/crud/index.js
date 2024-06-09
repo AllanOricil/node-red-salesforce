@@ -12,7 +12,7 @@ export default function (RED) {
         done(); // Ensure done is called to signal completion
         return; // Exit the function early
       }
-      let connection = await salesforceConnectionNode.getConnection();
+      let connection = await salesforceConnectionNode.login();
 
       if (!connection) {
         node.error('Failed to establish a connection to Salesforce', msg);
