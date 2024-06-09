@@ -1,0 +1,89 @@
+<script type="text/html" data-template-name="CRUD">
+  <!-- Node Name -->
+  <div class="form-row">
+    <label for="node-input-node_name">
+      <i class="fa fa-tag"></i>
+      <span data-i18n="salesforce.label.salesforce_connection">Name</span>
+    </label>
+    <input type="text" id="node-input-node_name" />
+  </div>
+  <!-- Connection selection -->
+  <div class="form-row">
+    <label for="node-input-connection">
+      <i class="fa fa-sitemap"></i>
+      <span data-i18n="salesforce.label.salesforce_connection">Connection</span>
+    </label>
+    <input type="text" id="node-input-connection" />
+  </div>
+
+  <!-- Operation type (CRUD) -->
+  <div class="form-row">
+    <label for="node-input-operation">
+      <i class="fa fa-flag-checkered"></i>
+      <span>Operation type</span>
+    </label>
+    <select id="node-input-operation">
+      <option value="create" selected>Create</option>
+      <option value="read">Read</option>
+      <option value="update">Update</option>
+      <option value="delete">Delete</option>
+    </select>
+  </div>
+  <!-- sObject  -->
+  <div class="form-row">
+    <label for="node-input-sObject">
+      <i class="fa fa-download"></i>
+      <span>Object</span>
+    </label>
+    <input
+      type="text"
+      id="node-input-sObject"
+      style="width: 30%;"
+      min="1"
+      value="Account"
+    />
+  </div>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('CRUD', {
+    category: 'Salesforce',
+    color: '#FFFFFF',
+    defaults: {
+      node_name: { value: 'CRUD - create' },
+      connection: { value: '', type: 'salesforce-connection' },
+      operation: { value: 'create' },
+      sObject: { value: 'Account' },
+    },
+    inputs: 1, // gets updated dynamically when 'endMessage inNodeOutput'
+    outputs: 1,
+    icon: 'salesforce.png',
+    label: function () {
+      return this.node_name;
+    },
+    oneditprepare: function () {
+      // Logic to handle automatic node label updates, set to operation, only if it is standard syntax.
+      // If user defined a label (not matching standard syntax) don't update label name
+      const predefinedLabels = [
+        'CRUD - create',
+        'CRUD - read',
+        'CRUD - update',
+        'CRUD - delete',
+      ];
+      $('#node-input-node_name').val(this.node_name);
+      $('#node-input-operation').on('change', function () {
+        let operation = $(this).val();
+        let currentName = $('#node-input-node_name').val();
+        if (predefinedLabels.includes(currentName)) {
+          $('#node-input-node_name').val(`CRUD - ${operation}`);
+        }
+      });
+    },
+    oneditsave: function () {
+      this.operation = $('#node-input-operation').val();
+      this.sObject = $('#node-input-sObject').val();
+      this.node_name = $('#node-input-node_name').val();
+    },
+    oneditcancel: function () {},
+  });
+</script>
