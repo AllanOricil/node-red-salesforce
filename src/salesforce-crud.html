@@ -34,9 +34,18 @@
           <option value="create" selected>Create</option>
           <option value="read">Read</option>
           <option value="update">Update</option>
+          <option value="upsert">Upsert</option>
           <option value="delete">Delete</option>
       </select>
     </div>
+    <!-- External Id Field for upserting records  -->
+    <div class="form-row" id="form-row-upsertExtIdField">
+      <label for="node-input-upsertExtIdField">
+          <i class="fa fa-download"></i>
+          <span>External ID Field</span>
+      </label>
+      <input type="text" id="node-input-upsertExtIdField" style="width: 30%;" min="1">
+  </div>
     <!-- allOrNone boolean option for deletion/create/update  -->
     <div class="form-row" id="form-row-allOrNone">
       <label for="node-input-allOrNone">
@@ -67,6 +76,7 @@
       sObject: {value: 'Account'},
       allOrNone: {value: false},
       allowRecursive: {value: true},
+      upsertExtIdField: {value: null}
     },
     inputs: 1, // gets updated dynamically when 'endMessage inNodeOutput'
     outputs: 1,
@@ -75,10 +85,11 @@
     oneditprepare: function () {
       // Logic to handle automatic node label updates, set to operation, only if it is standard syntax.
       // If user defined a label (not matching standard syntax) don't update label name
-      const predefinedLabels = ['CRUD - create', 'CRUD - read', 'CRUD - update', 'CRUD - delete'];
+      const predefinedLabels = ['CRUD - create', 'CRUD - read', 'CRUD - update', 'CRUD - delete', 'CRUD - upsert'];
       $('#node-input-node_name').val(this.node_name);
       $('#node-input-allOrNone').val(this.allOrNone);
       $('#node-input-allowRecursive').val(this.allowRecursive);
+      $('#node-input-upsertExtIdField').val(this.upsertExtIdField);
       $('#node-input-operation').on('change', function() {
         let operation = $(this).val();
         let currentName = $('#node-input-node_name').val();
@@ -95,6 +106,7 @@
         $('#form-row-allOrNone').toggle(['create', 'update', 'upsert', 'delete'].includes(operation));
         //$('#form-row-allOrNone').toggle(operation === 'create' || operation === 'update' ||operation === 'upsert' || operation === 'delete');
         $('#form-row-allowRecursive').toggle(['create', 'update', 'upsert', 'delete'].includes(operation));;
+        $('#form-row-upsertExtIdField').toggle(['upsert'].includes(operation));;
 
       }
       // Run initial visibility state allOrNone checkbox

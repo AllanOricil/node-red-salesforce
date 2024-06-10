@@ -111,24 +111,25 @@ module.exports = function (RED) {
           msg.payload = result || 'No valid record to update '; 
           node.send(msg);
         }catch (error) {
-          node.error("Error CRUD Create operation: " + error.message, msg);
+          node.error("Error CRUD Update operation: " + error.message, msg);
           done();
           }
         };
       // ***** Upsert ****** https://jsforce.github.io/document/#upsert
       if (config.operation == 'upsert' ){
         try{
-          if(msgInputType == 'object'){
-            const ret = await conn.sobject("Account").update({
-              Id: '0010500000fxbcuAAA',
-              Name : 'Updated Account #1'
-            })
-            if (ret.success) {
-              console.log(`Updated Successfully : ${ret.id}`);
-            }
+          let result; 
+          if(msgInputType == 'arrayOfObjects') { // array with records
+            result = await connection.sobject(config.sObject).upsert(msg.payload, config.upsertExtIdField,  options);
+
+            //! IS THIS POSSIBLE? SINGLE RECORD? Should be always an array? 
+          }else if (msgInputType == 'object' ) { // single record
+            result = await connection.sobject(config.sObject).upsert(msg.payload);
           }
+          msg.payload = result || 'No valid record to upsert '; 
+          node.send(msg);
         }catch (error) {
-          node.error("Error retrieving record CRUD Update operation: " + error.message, msg);
+          node.error("Error CRUD Upsert operation: " + error.message, msg);
           done();
           }
         };
