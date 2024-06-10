@@ -16,13 +16,13 @@ module.exports = function (RED) {
         done(); // Ensure done is called to signal completion
         return; // Exit the function early
       }
-        let connection = await salesforceConnectionNode.getConnection();
-
-        if (!connection) {
-          node.error("Failed to establish a connection to Salesforce", msg);
-          done(); // Ensure done is called to signal completion
-          return; // Exit the function early
-        }
+      let connection; 
+      try{
+        connection = await salesforceConnectionNode.getConnection();
+      }catch(error) {
+        node.error("Error retrieving connection: " + error.message, msg);
+        done();
+      }
         // Resolve input message as single record or array and prep for processing (single id OR array with id's)
         let msgInputType = 'unknown'; // Default 'unkown' means no valid ID's found as entry
         let id; // extracted single ID
@@ -98,9 +98,25 @@ module.exports = function (RED) {
           done();
           }
         };
-      //! Need UPSERT inside of Update or seperate? 
-      // ***** Update ******https://jsforce.github.io/document/#update
+      // ***** Update ****** https://jsforce.github.io/document/#update
+      //! when 'no valid records to update' << Throw error? some for other operations?
       if (config.operation == 'update' ){
+        try{
+          let result; 
+          if(msgInputType == 'arrayOfObjects') { // array with records
+            result = await connection.sobject(config.sObject).update(msg.payload, options);
+          }else if (msgInputType == 'object' ) { // single record
+            result = await connection.sobject(config.sObject).update(msg.payload);
+          }
+          msg.payload = result || 'No valid record to update '; 
+          node.send(msg);
+        }catch (error) {
+          node.error("Error CRUD Create operation: " + error.message, msg);
+          done();
+          }
+        };
+      // ***** Upsert ****** https://jsforce.github.io/document/#upsert
+      if (config.operation == 'upsert' ){
         try{
           if(msgInputType == 'object'){
             const ret = await conn.sobject("Account").update({

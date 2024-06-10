@@ -13,13 +13,13 @@ module.exports = function (RED) {
         done(); // Ensure done is called to signal completion
         return; // Exit the function early
       }
-        let connection = await salesforceConnectionNode.getConnection();
-
-        if (!connection) {
-          node.error("Failed to establish a connection to Salesforce", msg);
-          done(); // Ensure done is called to signal completion
-          return; // Exit the function early
-        }
+      let connection; 
+      try{
+        connection = await salesforceConnectionNode.getConnection();
+      }catch(error) {
+        node.error("Error retrieving connection: " + error.message, msg);
+        done();
+      }
 
 
         let query = config.query; 
