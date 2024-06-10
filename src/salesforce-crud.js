@@ -113,6 +113,7 @@ module.exports = function (RED) {
           }
         };
       // ***** Delete ****** https://jsforce.github.io/document/#delete
+      //! add the allOrNone parameter
       if (config.operation == 'delete' ){
         try{
           let result; 
