@@ -1,7 +1,7 @@
 module.exports = function (RED) {
   'use strict';
   const jsforce = require('jsforce');
-  
+
   function SalesforceConnectionNode(config) {
     RED.nodes.createNode(this, config);
     const node = this; // referencing current node
@@ -21,16 +21,18 @@ module.exports = function (RED) {
       });
     }
 
-    this.getConnection = async function() {
+    this.getConnection = async function () {
       try {
-        await this.connection.login(this.credentials.username, this.credentials.password);
+        await this.connection.login(
+          this.credentials.username,
+          this.credentials.password,
+        );
         return this.connection;
       } catch (err) {
         node.error(err);
         throw err;
       }
-    }
-
+    };
   }
 
   RED.nodes.registerType('salesforce-connection', SalesforceConnectionNode, {
@@ -43,14 +45,15 @@ module.exports = function (RED) {
   });
 
   // receive "test connection' button click from editor"
-  RED.httpAdmin.post("/test-salesforce-connection", async function (req, res) {
+  RED.httpAdmin.post('/test-salesforce-connection', async function (req, res) {
     const {
+      // eslint-disable-next-line no-unused-vars
       id,
       username,
       password,
       instance_url,
       connected_app_client_id,
-      connected_app_client_secret
+      connected_app_client_secret,
     } = req.body;
 
     try {
@@ -59,14 +62,16 @@ module.exports = function (RED) {
           loginUrl: instance_url,
           clientId: connected_app_client_id,
           clientSecret: connected_app_client_secret,
-        }
+        },
       });
 
       await connection.login(username, password);
-      RED.log.info("Salesforce connection successful!");
-      res.status(200).json({ status: 'success', message: 'Connection successful' });
+      RED.log.info('Salesforce connection successful!');
+      res
+        .status(200)
+        .json({ status: 'success', message: 'Connection successful' });
     } catch (err) {
-      RED.log.warn("Salesforce connection failed: " + err.message);
+      RED.log.warn('Salesforce connection failed: ' + err.message);
       res.status(500).json({ status: 'error', message: err.message });
     }
   });
