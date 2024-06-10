@@ -59,6 +59,10 @@ module.exports = function (RED) {
         }
         // set operation type in msg object for downstream use
         msg.crud_operation = config.operation;
+        let options = {
+          allOrNone: config.allOrNone, 
+          allowRecursive: config.allowRecursive
+        }
         
 
       // ***** Create ******
@@ -66,7 +70,7 @@ module.exports = function (RED) {
         try{
           let result; 
           if(msgInputType == 'arrayOfObjects') { // array with records
-            result = await connection.sobject(config.sObject).create(msg.payload);
+            result = await connection.sobject(config.sObject).create(msg.payload, options);
           }else if (msgInputType == 'object' ) { // single record
             result = await connection.sobject(config.sObject).create(msg.payload);
           }
@@ -113,12 +117,11 @@ module.exports = function (RED) {
           }
         };
       // ***** Delete ****** https://jsforce.github.io/document/#delete
-      //! add the allOrNone parameter
       if (config.operation == 'delete' ){
         try{
           let result; 
           if((msgInputType == 'arrayOfStrings' || msgInputType == 'arrayOfObjects') && idArray != null) { // array with ids
-            let resultRaw = await connection.sobject(config.sObject).delete(idArray)
+            let resultRaw = await connection.sobject(config.sObject).delete(idArray, options)
             result = resultRaw.filter(value => value != null) // remove null values in array (when ID not matching inserted sObject)
           }else if ((msgInputType == 'string' || msgInputType == 'object') && id != null) { // single id in string
             result = await connection.sobject(config.sObject).delete(id)

@@ -37,7 +37,7 @@
           <option value="delete">Delete</option>
       </select>
     </div>
-    <!-- allOrNone boolean option for deletion  -->
+    <!-- allOrNone boolean option for deletion/create/update  -->
     <div class="form-row" id="form-row-allOrNone">
       <label for="node-input-allOrNone">
           <i class="fa fa-download"></i>
@@ -45,6 +45,14 @@
       </label>
       <input type="checkbox" id="node-input-allOrNone" style="width: 30%;">
   </div>
+      <!-- AllowRecursive boolean option for deletion/create/update  -->
+      <div class="form-row" id="form-row-allowRecursive">
+        <label for="node-input-allowRecursive">
+            <i class="fa fa-download"></i>
+            <span>Allow Recursive option?</span>
+        </label>
+        <input type="checkbox" id="node-input-allowRecursive" style="width: 30%;">
+    </div>
     
 </script>
 
@@ -58,6 +66,7 @@
       operation: {value: 'create'},
       sObject: {value: 'Account'},
       allOrNone: {value: false},
+      allowRecursive: {value: true},
     },
     inputs: 1, // gets updated dynamically when 'endMessage inNodeOutput'
     outputs: 1,
@@ -67,8 +76,9 @@
       // Logic to handle automatic node label updates, set to operation, only if it is standard syntax.
       // If user defined a label (not matching standard syntax) don't update label name
       const predefinedLabels = ['CRUD - create', 'CRUD - read', 'CRUD - update', 'CRUD - delete'];
-      $('#node-input-allOrNone').val(this.allOrNone);
       $('#node-input-node_name').val(this.node_name);
+      $('#node-input-allOrNone').val(this.allOrNone);
+      $('#node-input-allowRecursive').val(this.allowRecursive);
       $('#node-input-operation').on('change', function() {
         let operation = $(this).val();
         let currentName = $('#node-input-node_name').val();
@@ -77,21 +87,25 @@
           $('#node-input-node_name').val(`CRUD - ${operation}`);
         }
         // toggle allOrNone checkbox Visibility
-        toggleAllOrNoneVisibility(); 
+        toggleOptionsVisibility(); 
       });
       // function to toggle AllOrNone checkbox wehen operation Deltete
-      function toggleAllOrNoneVisibility(){
+      function toggleOptionsVisibility(){
         let operation = $('#node-input-operation').val();
-        $('#form-row-allOrNone').toggle(operation === 'delete');
+        $('#form-row-allOrNone').toggle(['create', 'update', 'upsert', 'delete'].includes(operation));
+        //$('#form-row-allOrNone').toggle(operation === 'create' || operation === 'update' ||operation === 'upsert' || operation === 'delete');
+        $('#form-row-allowRecursive').toggle(['create', 'update', 'upsert', 'delete'].includes(operation));;
+
       }
       // Run initial visibility state allOrNone checkbox
-      toggleAllOrNoneVisibility();
+      toggleOptionsVisibility();
     },
     oneditsave: function() {
       this.operation = $('#node-input-operation').val();
       this.sObject = $('#node-input-sObject').val();
       this.node_name = $('#node-input-node_name').val();
       this.allOrNone = $('#node-input-allOrNone').val();
+      this.allowRecursive = $('#node-input-allowRecursive').val();
   },
   oneditcancel: function() {
   },
