@@ -1,7 +1,6 @@
 import { isValidSalesforceId } from '../../utils/utils';
 
-module.exports = function (RED) {
-  'use strict';
+export default function (RED) {
   function SalesforceCRUDNode(config) {
     RED.nodes.createNode(this, config);
     const salesforceConnectionNode = RED.nodes.getNode(config.connection);
@@ -13,12 +12,12 @@ module.exports = function (RED) {
         done(); // Ensure done is called to signal completion
         return; // Exit the function early
       }
-      let connection;
-      try {
-        connection = await salesforceConnectionNode.getConnection();
-      } catch (error) {
-        node.error('Error retrieving connection: ' + error.message, msg);
-        done();
+      let connection = await salesforceConnectionNode.login();
+
+      if (!connection) {
+        node.error('Failed to establish a connection to Salesforce', msg);
+        done(); // Ensure done is called to signal completion
+        return; // Exit the function early
       }
       // Resolve input message as single record or array and prep for processing (single id OR array with id's)
       let msgInputType = 'unknown'; // Default 'unkown' means no valid ID's found as entry
@@ -185,4 +184,4 @@ module.exports = function (RED) {
   }
 
   RED.nodes.registerType('CRUD', SalesforceCRUDNode);
-};
+}
