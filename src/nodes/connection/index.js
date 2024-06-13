@@ -48,7 +48,7 @@ export default function (RED) {
     },
   });
 
-  // receive "test connection' button click from editor"
+  // receive "test connection' button click from editor in UI"
   RED.httpAdmin.post('/salesforce/connection/test', async function (req, res) {
     try {
       const salesforceConnectionNode = RED.nodes.getNode(req.body.id);
@@ -61,7 +61,7 @@ export default function (RED) {
         RED.log.info(
           `using deployed salesforce connection node: ${salesforceConnectionNode.name || salesforceConnectionNode.id}`,
         );
-        await salesforceConnectionNode.login();
+        await salesforceConnectionNode.getConnection();
       } else {
         // TODO: add ajv to validate req body
         const connection = new jsforce.Connection({
