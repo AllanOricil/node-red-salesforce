@@ -10,21 +10,32 @@ export default function (RED) {
       clientSecret: this.credentials?.connected_app_client_secret,
     };
 
-    // TODO: pass several parameters to this guy to determine the type of connection it can open
-    this.login = async () => {
-      try {
-        this.connection = new jsforce.Connection({
-          oauth2: this.oauth2,
-        });
+    this.connection = null; // Connection stored here
 
-        await this.connection.login(
-          this.credentials.username,
-          this.credentials.password,
-        );
-        return this.connection;
-      } catch (err) {
-        RED.node.error(err);
+    // TODO: pass several parameters to this guy to determine the type of connection it can open
+    this.getConnection = async () => {
+      // If no connection object, create and login
+      if (!this.connection) {
+        console.log('Creating new connection');
+        try {
+          this.connection = new jsforce.Connection({
+            oauth2: this.oauth2,
+          });
+          await this.connection.login(
+            this.credentials.username,
+            this.credentials.password,
+          );
+        } catch (err) {
+          RED.node.error(err);
+        }
       }
+
+      // Finnaly return the connection
+      // TEMP for debug purpose.
+      console.log('accesToken:' & this.connection.accessToken);
+      console.log('refreshToken:' & this.connection.refreshToken);
+      console.log('instanceUrl:' & this.connection.instanceUrl);
+      return this.connection;
     };
   }
 
