@@ -32,9 +32,12 @@ export default function (RED) {
 
       // Finnaly return the connection
       // TEMP for debug purpose.
-      console.log('accesToken:' & this.connection.accessToken);
-      console.log('refreshToken:' & this.connection.refreshToken);
-      console.log('instanceUrl:' & this.connection.instanceUrl);
+      console.log('accessToken:' + this.connection.accessToken);
+      console.log('refreshToken:' + this.connection.refreshToken);
+      console.log('instanceUrl:' + this.connection.instanceUrl);
+      console.log('userId:' + this.connection.userInfo.id);
+      console.log('orgId:' + this.connection.userInfo.organizationId);
+
       return this.connection;
     };
   }
@@ -52,7 +55,8 @@ export default function (RED) {
   RED.httpAdmin.post('/salesforce/connection/test', async function (req, res) {
     try {
       const salesforceConnectionNode = RED.nodes.getNode(req.body.id);
-
+      //! Needs refactoring? This below doesn't allow changing loginURL and validating the changed values?
+      //! beter to pass complete field object to the main function?
       if (
         salesforceConnectionNode?.oauth2?.loginUrl &&
         salesforceConnectionNode?.oauth2?.clientId &&
