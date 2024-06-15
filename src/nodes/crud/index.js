@@ -12,7 +12,7 @@ export default function (RED) {
         done(); // Ensure done is called to signal completion
         return; // Exit the function early
       }
-      let connection = await salesforceConnectionNode.login();
+      let connection = await salesforceConnectionNode.getConnection();
 
       if (!connection) {
         node.error('Failed to establish a connection to Salesforce', msg);
@@ -60,6 +60,10 @@ export default function (RED) {
       }
       // set operation type in msg object for downstream use
       msg.crud_operation = config.operation;
+      let options = {
+        allOrNone: config.allOrNone,
+        allowRecursive: config.allowRecursive,
+      };
 
       // ***** Create ******
       if (config.operation == 'create') {
@@ -69,7 +73,7 @@ export default function (RED) {
             // array with records
             result = await connection
               .sobject(config.sObject)
-              .create(msg.payload);
+              .create(msg.payload, options);
           } else if (msgInputType == 'object') {
             // single record
             result = await connection
@@ -111,24 +115,37 @@ export default function (RED) {
           done();
         }
       }
-      //! Need UPSERT inside of Update or seperate?
-      // ***** Update ******https://jsforce.github.io/document/#update
+      // ***** Update ****** https://jsforce.github.io/document/#update
+      //! when 'no valid records to update' << Throw error? some for other operations?
       if (config.operation == 'update') {
         try {
-          if (msgInputType == 'object') {
-            const ret = await connection.sobject('Account').update({
-              Id: '0010500000fxbcuAAA',
-              Name: 'Updated Account #1',
-            });
-            if (ret.success) {
-              console.log(`Updated Successfully : ${ret.id}`);
-            }
+          let result;
+          if (msgInputType == 'arrayOfObjects' || msgInputType == 'object') {
+            // array with records
+            result = await connection
+              .sobject(config.sObject)
+              .update(msg.payload, options);
           }
+          msg.payload = result || 'No valid record to update ';
+          node.send(msg);
         } catch (error) {
-          node.error(
-            'Error retrieving record CRUD Update operation: ' + error.message,
-            msg,
-          );
+          node.error('Error CRUD Update operation: ' + error.message, msg);
+          done();
+        }
+      }
+      // ***** Upsert ****** https://jsforce.github.io/document/#upsert
+      if (config.operation == 'upsert') {
+        try {
+          let result;
+          if (msgInputType == 'object' || msgInputType == 'arrayOfObjects') {
+            result = await connection
+              .sobject(config.sObject)
+              .upsert(msg.payload, config.upsertExtIdField, options);
+          }
+          msg.payload = result || 'No valid record to upsert ';
+          node.send(msg);
+        } catch (error) {
+          node.error('Error CRUD Upsert operation: ' + error.message, msg);
           done();
         }
       }
@@ -144,7 +161,7 @@ export default function (RED) {
             // array with ids
             let resultRaw = await connection
               .sobject(config.sObject)
-              .delete(idArray);
+              .delete(idArray, options);
             result = resultRaw.filter((value) => value != null); // remove null values in array (when ID not matching inserted sObject)
           } else if (
             (msgInputType == 'string' || msgInputType == 'object') &&

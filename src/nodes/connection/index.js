@@ -10,21 +10,35 @@ export default function (RED) {
       clientSecret: this.credentials?.connected_app_client_secret,
     };
 
-    // TODO: pass several parameters to this guy to determine the type of connection it can open
-    this.login = async () => {
-      try {
-        this.connection = new jsforce.Connection({
-          oauth2: this.oauth2,
-        });
+    this.connection = null; // Connection stored here
 
-        await this.connection.login(
-          this.credentials.username,
-          this.credentials.password,
-        );
-        return this.connection;
-      } catch (err) {
-        RED.node.error(err);
+    // TODO: pass several parameters to this guy to determine the type of connection it can open
+    this.getConnection = async () => {
+      // If no connection object, create and login
+      if (!this.connection) {
+        console.log('Creating new connection');
+        try {
+          this.connection = new jsforce.Connection({
+            oauth2: this.oauth2,
+          });
+          await this.connection.login(
+            this.credentials.username,
+            this.credentials.password,
+          );
+        } catch (err) {
+          RED.node.error(err);
+        }
       }
+
+      // Finnaly return the connection
+      // TEMP for debug purpose.
+      console.log('accessToken:' + this.connection.accessToken);
+      console.log('refreshToken:' + this.connection.refreshToken);
+      console.log('instanceUrl:' + this.connection.instanceUrl);
+      console.log('userId:' + this.connection.userInfo.id);
+      console.log('orgId:' + this.connection.userInfo.organizationId);
+
+      return this.connection;
     };
   }
 
@@ -37,11 +51,12 @@ export default function (RED) {
     },
   });
 
-  // receive "test connection' button click from editor"
+  // receive "test connection' button click from editor in UI"
   RED.httpAdmin.post('/salesforce/connection/test', async function (req, res) {
     try {
       const salesforceConnectionNode = RED.nodes.getNode(req.body.id);
-
+      //! Needs refactoring? This below doesn't allow changing loginURL and validating the changed values?
+      //! beter to pass complete field object to the main function?
       if (
         salesforceConnectionNode?.oauth2?.loginUrl &&
         salesforceConnectionNode?.oauth2?.clientId &&
@@ -50,7 +65,7 @@ export default function (RED) {
         RED.log.info(
           `using deployed salesforce connection node: ${salesforceConnectionNode.name || salesforceConnectionNode.id}`,
         );
-        await salesforceConnectionNode.login();
+        await salesforceConnectionNode.getConnection();
       } else {
         // TODO: add ajv to validate req body
         const connection = new jsforce.Connection({
