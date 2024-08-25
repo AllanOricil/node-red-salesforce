@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 function setConnectionResult(message, color) {
-  const testConnectionResult = document.getElementById('testresult');
+  const testConnectionResult = document.querySelector(
+    '#connection #test-connection-result',
+  );
   testConnectionResult.textContent = message;
   testConnectionResult.style.color = color;
 }
