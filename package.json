@@ -34,9 +34,12 @@
     "format": "prettier \"**/*.{js,json,html}\" . --check",
     "format:fix": "prettier --write \"**/*.{js,json,html}\" .",
     "release": "semantic-release",
-    "build": "node esbuild.config.js"
+    "build": "node builder.js",
+    "docker:compose:up": "npm run build && docker-compose -p node-red-salesforce up --force-recreate -d && docker exec node-red-salesforce sh -c 'cd /data && npm install /node-red-custom-node'",
+    "docker:compose:down": "docker-compose -p node-red-salesforce down"
   },
   "dependencies": {
+    "@allanoricil/node-red-node": "^0.0.0-beta.5",
     "jsforce": "^1.11.1"
   },
   "devDependencies": {
@@ -48,6 +51,7 @@
     "@semantic-release/github": "^10.0.3",
     "@semantic-release/npm": "^12.0.0",
     "@semantic-release/release-notes-generator": "^13.0.0",
+    "deepmerge": "^4.3.1",
     "esbuild": "^0.21.4",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",

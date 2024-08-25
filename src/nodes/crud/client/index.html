@@ -1,0 +1,69 @@
+<div class="form-row">
+  <label for="node-input-node_name">
+    <i class="fa fa-tag"></i>
+    <span data-i18n="crud.salesforce.label.salesforce_connection">Name</span>
+  </label>
+  <input type="text" id="node-input-node_name" />
+</div>
+<!-- Connection selection -->
+<div class="form-row">
+  <label for="node-input-connection">
+    <i class="fa fa-sitemap"></i>
+    <span data-i18n="crud.salesforce.label.salesforce_connection">
+      Connection
+    </span>
+  </label>
+  <input type="text" id="node-input-connection" />
+</div>
+
+<!-- sObject  -->
+<div class="form-row">
+  <label for="node-input-sObject">
+    <i class="fa fa-download"></i>
+    <span>Object</span>
+  </label>
+  <input type="text" id="node-input-sObject" style="width: 30%" min="1" />
+</div>
+<!-- Operation type (CRUD) -->
+<div class="form-row">
+  <label for="node-input-operation">
+    <i class="fa fa-flag-checkered"></i>
+    <span>Operation type</span>
+  </label>
+  <select id="node-input-operation">
+    <option value="create" selected>Create</option>
+    <option value="read">Read</option>
+    <option value="update">Update</option>
+    <option value="upsert">Upsert</option>
+    <option value="delete">Delete</option>
+  </select>
+</div>
+<!-- External Id Field for upserting records  -->
+<div class="form-row" id="form-row-upsertExtIdField">
+  <label for="node-input-upsertExtIdField">
+    <i class="fa fa-download"></i>
+    <span>Upserting External ID Field</span>
+  </label>
+  <input
+    type="text"
+    id="node-input-upsertExtIdField"
+    style="width: 30%"
+    min="1"
+  />
+</div>
+<!-- allOrNone boolean option for deletion/create/update  -->
+<div class="form-row" id="form-row-allOrNone">
+  <label for="node-input-allOrNone">
+    <i class="fa fa-download"></i>
+    <span>All or None option?</span>
+  </label>
+  <input type="checkbox" id="node-input-allOrNone" style="width: 30%" />
+</div>
+<!-- AllowRecursive boolean option for deletion/create/update  -->
+<div class="form-row" id="form-row-allowRecursive">
+  <label for="node-input-allowRecursive">
+    <i class="fa fa-download"></i>
+    <span>Allow Recursive option?</span>
+  </label>
+  <input type="checkbox" id="node-input-allowRecursive" style="width: 30%" />
+</div>

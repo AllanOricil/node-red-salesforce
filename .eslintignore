@@ -1,4 +1,7 @@
+.husky
 node_modules
-dist
 assets
-esbuild.config.js
+dist
+commitlint.config.js
+builder.js
+.node-red-builder

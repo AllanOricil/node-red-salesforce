@@ -10,6 +10,9 @@
     "sourceType": "module"
   },
   "globals": {
-    "RED": true
+    "RED": true,
+    "$": "readonly",
+    "document": "readonly",
+    "window": "readonly"
   }
 }
