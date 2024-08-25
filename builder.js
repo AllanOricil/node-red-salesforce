@@ -95,7 +95,7 @@ async function bundleServer() {
       // NOTE: this prop doesnt work unless minify = true
       keepNames: true,
       outfile: path.resolve(BUNDLER_TMP_DIST_FOLDER, "index.js"),
-      sourcemap: true,
+      // sourcemap: true,
     }
   );
 
@@ -164,7 +164,7 @@ async function bundleClient() {
         // NOTE: this prop doesnt work unless minify = true
         keepNames: true,
         outfile: jsOutputPath,
-        sourcemap: "inline",
+        // sourcemap: "inline",
         allowOverwrite: true,
       }
     );
