@@ -4,7 +4,6 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "@allanoricil/node-red-salesforce": "file:../node-red-custom-node",
         "node-red-salesforce": "file:../node-red-custom-node"
     }
 }

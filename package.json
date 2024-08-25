@@ -35,11 +35,13 @@
     "format:fix": "prettier --write \"**/*.{js,json,html}\" .",
     "release": "semantic-release",
     "build": "node builder.js",
-    "docker:compose:up": "npm run build && docker-compose -p node-red-salesforce up --force-recreate -d && docker exec node-red-salesforce sh -c 'cd /data && npm install /node-red-custom-node'",
-    "docker:compose:down": "docker-compose -p node-red-salesforce down"
+    "docker:compose:up": "docker-compose -p node-red-salesforce up --force-recreate -d && docker exec node-red-salesforce sh -c 'cd /data && npm install /node-red-custom-node'",
+    "docker:compose:down": "docker-compose -p node-red-salesforce down",
+    "dev": "npm link && cd ./node-red && npm link node-red-salesforce && cd .. && node-red --settings ./node-red/settings.js --userDir ./node-red"
   },
   "dependencies": {
     "@allanoricil/node-red-node": "^0.0.0-beta.5",
+    "axios": "^1.7.5",
     "jsforce": "^1.11.1"
   },
   "devDependencies": {
