@@ -8,13 +8,13 @@ export default class Connection extends Node {
     this.connection = null; // Connection stored here
   }
 
-  static init(RED) {
+  static init() {
     // receive "test connection' button click from editor in UI"
-    RED.httpAdmin.post(
+    this.RED.httpAdmin.post(
       '/salesforce/connection/test',
       async function (req, res) {
         try {
-          const salesforceConnectionNode = RED.nodes.getNode(req.body.id);
+          const salesforceConnectionNode = this.RED.nodes.getNode(req.body.id);
           //! Needs refactoring? This below doesn't allow changing loginURL and validating the changed values?
           //! beter to pass complete field object to the main function?
           if (
@@ -22,7 +22,7 @@ export default class Connection extends Node {
             salesforceConnectionNode?.credentials?.connected_app_client_id &&
             salesforceConnectionNode?.credentials?.connected_app_client_secret
           ) {
-            RED.log.info(
+            this.RED.log.info(
               `using deployed salesforce connection node: ${salesforceConnectionNode.name || salesforceConnectionNode.id}`,
             );
             await salesforceConnectionNode.getConnection();
@@ -39,13 +39,13 @@ export default class Connection extends Node {
             await connection.login(req.body.username, req.body.password);
           }
         } catch (err) {
-          RED.log.error('Salesforce connection failed: ' + err.message);
+          this.RED.log.error('Salesforce connection failed: ' + err.message);
           return res
             .status(500)
             .json({ status: 'error', message: err.message });
         }
 
-        RED.log.info('Salesforce connection successful!');
+        this.RED.log.info('Salesforce connection successful!');
         res
           .status(200)
           .json({ status: 'success', message: 'Connection successful' });

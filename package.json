@@ -18,26 +18,29 @@
   },
   "keywords": [
     "node-red",
+    "nrg",
     "salesforce",
     "jsforce",
     "salesforce-flow-pro"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=20",
+    "npm": ">=10"
   },
   "main": "dist/index.js",
   "type": "commonjs",
   "scripts": {
-    "prepare": "husky",
+    "build": "./node_modules/.bin/nrg build",
+    "watch": "./node_modules/.bin/nrg dev -w -o",
+    "watch:debug": "./node_modules/.bin/nrg dev -w -o -d",
+    "start": "./node_modules/.bin/nrg dev -o",
+    "start:debug": "./node_modules/.bin/nrg dev -o -d",
     "lint": "eslint .",
     "lint:fix": "eslint --ext .js --fix .",
     "format": "prettier \"**/*.{js,json,html}\" . --check",
     "format:fix": "prettier --write \"**/*.{js,json,html}\" .",
     "release": "semantic-release",
-    "build": "node builder.js",
-    "docker:compose:up": "docker-compose -p node-red-salesforce up --force-recreate -d && docker exec node-red-salesforce sh -c 'cd /data && npm install /node-red-custom-node'",
-    "docker:compose:down": "docker-compose -p node-red-salesforce down",
-    "dev": "npm link && cd ./node-red && npm link node-red-salesforce && cd .. && node-red --settings ./node-red/settings.js --userDir ./node-red"
+    "prepare": "husky"
   },
   "dependencies": {
     "@allanoricil/node-red-node": "^0.0.0-beta.5",
@@ -45,6 +48,7 @@
     "jsforce": "^1.11.1"
   },
   "devDependencies": {
+    "@allanoricil/nrg-cli": "^0.0.0-beta.4",
     "@commitlint/cli": "^19.2.2",
     "@commitlint/config-conventional": "^19.2.2",
     "@semantic-release/changelog": "^6.0.3",
@@ -60,6 +64,7 @@
     "fs-extra": "^11.2.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
+    "node-red": "^4.0.2",
     "prettier": "^3.3.1",
     "semantic-release": "^23.0.8"
   },

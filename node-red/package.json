@@ -2,8 +2,5 @@
     "name": "node-red-project",
     "description": "A Node-RED Project",
     "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "node-red-salesforce": "file:../node-red-custom-node"
-    }
+    "private": true
 }
