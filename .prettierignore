@@ -1,3 +1,9 @@
-node_modules
+.husky
+.npmrc
+icons
 dist
-assets
+node_modules
+package.json
+package-lock.json
+.node-red-builder
+builder.js
