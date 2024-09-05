@@ -43,8 +43,8 @@ Thumbs.db
 *.mov
 *.wmv
 
-
-!node-red/flows.json
 node-red
+!node-red/flows.json
+
 
 .nrg
