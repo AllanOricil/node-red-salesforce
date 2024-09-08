@@ -43,12 +43,11 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@allanoricil/node-red-node": "^0.0.0-beta.5",
     "axios": "^1.7.5",
     "jsforce": "^1.11.1"
   },
   "devDependencies": {
-    "@allanoricil/nrg-cli": "^0.0.0-beta.4",
+    "@allanoricil/nrg-cli": "^0.0.0-beta.13",
     "@commitlint/cli": "^19.2.2",
     "@commitlint/config-conventional": "^19.2.2",
     "@semantic-release/changelog": "^6.0.3",
