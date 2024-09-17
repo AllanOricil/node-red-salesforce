@@ -1,0 +1,12 @@
+{
+  "label": "Verbindung",
+  "inputs": {
+    "name": "Name",
+    "apiVersion": "API-Version",
+    "instanceUrl": "Organisations-URL",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "connectedAppClientId": "Kunden-ID",
+    "connectedAppClientSecret": "Kundengeheimnis"
+  }
+}

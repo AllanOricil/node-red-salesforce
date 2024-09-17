@@ -2,47 +2,41 @@ export default {
   category: 'Salesforce',
   color: '#FFFFFF',
   defaults: {
+    name: { value: '', required: false },
     connection: { type: 'connection', required: true },
     query: { value: 'Select Id From Account LIMIT 1' },
-    outputStyle: { value: 'messageAllRecords', required: true }, // Default to 'allRecords'
-    endMessage: { value: 'none', required: true }, // Default to "none"
-    outputs: { value: 1 }, // Default output count 1, when message per record and "inNodeOutput" create additional output
-    maxFetch: { value: 10000 }, // max records to fetch
-    delay: { value: 10 }, // delay in milliseconds between releasing records
+    outputStyle: { value: 'messageAllRecords', required: true },
+    endMessage: { value: 'none', required: true },
+    outputs: { value: 1 },
+    maxFetch: { value: 10000 },
+    delay: { value: 10 },
   },
   inputs: 1,
-  outputs: 1, // gets updated dynamically when 'endMessage inNodeOutput'
+  outputs: 1,
   outputLabels: ['Record Output', 'End Message Output'],
-
   icon: 'salesforce.png',
-  label: 'Query',
+  label: function () {
+    return this.name || this._('query.label');
+  },
   oneditprepare: function () {
-    // Editor
     this.editor = RED.editor.createEditor({
-      id: 'node-input-query_editor',
+      id: 'node-input-queryEditor',
       mode: 'ace/mode/sql',
       value: this.query,
     });
-    // Set maxFetch from the node's current configuration
     $('#node-input-maxFetch').val(this.maxFetch || 10000);
     $('#node-input-delay').val(this.delay || 10);
-    // Function to toggle the visibility of the end message select based on the output style
     function toggleEndMessageVisibilityAndOutput() {
       var outputStyle = $('#node-input-outputStyle').val();
       var endMessage = $('#node-input-endMessage').val();
-      // toggle endmessage field when messagePerRecord
       $('#endMessageComponent').toggle(outputStyle === 'messagePerRecord');
-      // update Node output value
       $('#node-input-outputs').val(
         outputStyle === 'messagePerRecord' && endMessage === 'inNodeOutput'
           ? 2
           : 1,
       );
     }
-    // Set initial visibility state of the end message options
     toggleEndMessageVisibilityAndOutput();
-
-    // Attach change event to the outputStyle and Endmessage  dropdown to control the visibility and output dynamically
     $('#node-input-outputStyle, #node-input-endMessage').on(
       'change',
       function () {

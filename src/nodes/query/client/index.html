@@ -1,34 +1,42 @@
 <div id="query">
   <div class="form-row">
-    <label for="node-input-connection">
-      <i class="fa fa-sitemap"></i>
-      <span data-i18n="query.salesforce.label.salesforce_connection"></span>
+    <label for:="name">
+      <i class="fa fa-tag"></i>
+      <span i18n:="inputs.name">Name</span>
     </label>
-    <input type="text" id="node-input-connection" />
+    <input type="text" id:="name" />
+  </div>
+  
+  <div class="form-row">
+    <label for:="connection">
+      <i class="fa fa-sitemap"></i>
+      <span i18n:="inputs.connection"> Connection</span>
+    </label>
+    <input type="text" id:="connection" />
   </div>
 
   <!-- SOQL editor -->
   <div class="form-row node-text-editor-row">
-    <label for="node-input-soql">
+    <label for:="queryEditor">
       <i class="fa fa-database"></i>
-      <span id="node-input-soql-label" data-i18n="query.salesforce.label.soql">
+      <span id="query-editor-label" i18n:="inputs.soqlQuery">
         SOQL Query
       </span>
     </label>
     <div
       style="height: 250px; min-height: 150px"
       class="node-text-editor"
-      id="node-input-query_editor"
+      id:="queryEditor"
     ></div>
   </div>
 
   <!-- Output style -->
   <div class="form-row">
-    <label for="node-input-outputStyle">
+    <label for:="outputStyle">
       <i class="fa fa-random"></i>
       <span>Output Style</span>
     </label>
-    <select id="node-input-outputStyle">
+    <select id:="outputStyle">
       <option value="messageAllRecords" selected>
         1 Message all records (default)
       </option>
@@ -38,41 +46,41 @@
   <!-- Output style -->
   <div id="endMessageComponent">
     <div class="form-row">
-      <label for="node-input-endMessage">
+      <label for:="endMessage">
         <i class="fa fa-flag-checkered"></i>
         <span>End Message</span>
       </label>
-      <select id="node-input-endMessage">
+      <select id:="endMessage">
         <option value="none" selected>None (default)</option>
         <option value="inStream">End message in stream</option>
         <option value="inNodeOutput">
           End message in seperate node output
         </option>
       </select>
-      <input type="hidden" id="node-input-outputs" />
+      <input type="hidden" id:="outputs" />
     </div>
     <!-- Max fetch  maximum numbers to fetch-->
     <div class="form-row">
-      <label for="node-input-maxFetch">
+      <label for:="maxFetch">
         <i class="fa fa-download"></i>
         <span>Max records</span>
       </label>
       <input
         type="number"
-        id="node-input-maxFetch"
+        id:="maxFetch"
         style="width: 30%"
         min="1"
         value="10000"
       />
     </div>
     <div class="form-row">
-      <label for="node-input-delay">
+      <label for:="delay">
         <i class="fa fa-download"></i>
         <span>Delay in ms</span>
       </label>
       <input
         type="number"
-        id="node-input-delay"
+        id:="delay"
         style="width: 30%"
         min="1"
         value="10"

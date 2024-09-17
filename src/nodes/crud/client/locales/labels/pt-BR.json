@@ -1,0 +1,7 @@
+{
+  "label": "CRUD",
+  "inputs": {
+    "name": "Nome",
+    "connection": "Conexão"
+  }
+}

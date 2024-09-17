@@ -30,24 +30,31 @@
   "main": "dist/index.js",
   "type": "commonjs",
   "scripts": {
-    "build": "./node_modules/.bin/nrg build",
-    "watch": "./node_modules/.bin/nrg dev -w -o",
-    "watch:debug": "./node_modules/.bin/nrg dev -w -o -d",
-    "start": "./node_modules/.bin/nrg dev -o",
-    "start:debug": "./node_modules/.bin/nrg dev -o -d",
+    "build": "nrg build",
+    "build:dev": "nrg build -e dev",
+    "watch": "nrg dev -w -o",
+    "watch:debug": "nrg dev -w -o -d",
+    "start": "nrg dev -o",
+    "start:debug": "nrg dev -o -d",
+    "start:prod": "nrg dev -o -d -e prod",
     "lint": "eslint .",
-    "lint:fix": "eslint --ext .js --fix .",
-    "format": "prettier \"**/*.{js,json,html}\" . --check",
-    "format:fix": "prettier --write \"**/*.{js,json,html}\" .",
-    "release": "semantic-release",
-    "prepare": "husky"
+    "lint:fix": "eslint --fix .",
+    "format": "prettier **/*.{js,json,html} --ignore-unknown",
+    "format:fix": "prettier **/*.{js,json,html} --write --ignore-unknown",
+    "prepare": "husky",
+    "release": "semantic-release"
+  },
+  "node-red": {
+    "nodes": {
+      "salesforce": "dist/index.js"
+    }
   },
   "dependencies": {
     "axios": "^1.7.5",
     "jsforce": "^1.11.1"
   },
   "devDependencies": {
-    "@allanoricil/nrg-cli": "^0.0.0-beta.13",
+    "@allanoricil/nrg-cli": "^1.0.1",
     "@commitlint/cli": "^19.2.2",
     "@commitlint/config-conventional": "^19.2.2",
     "@semantic-release/changelog": "^6.0.3",
@@ -61,24 +68,17 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "fs-extra": "^11.2.0",
-    "husky": "^8.0.3",
+    "husky": "^9.1.6",
     "lint-staged": "^15.2.0",
     "node-red": "^4.0.2",
     "prettier": "^3.3.1",
     "semantic-release": "^23.0.8"
   },
-  "node-red": {
-    "nodes": {
-      "salesforce": "dist/index.js"
-    }
-  },
   "lint-staged": {
-    "*.{js}": [
-      "npm run format:fix",
-      "npm run lint:fix"
-    ],
-    "*.{html,json}": [
-      "npm run format:fix"
+    "**/*.{json, html}": "prettier --write --ignore-unknown",
+    "**/*.{js}": [
+      "prettier --write --ignore-unknown",
+      "eslint --fix"
     ]
   }
 }

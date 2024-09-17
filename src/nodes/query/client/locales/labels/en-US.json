@@ -1,0 +1,8 @@
+{
+  "label": "Abfrage",
+  "inputs": {
+    "name": "Name",
+    "connection": "Verbindung",
+    "soqlQuery": "SOQL-Abfrage"
+  }
+}

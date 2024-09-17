@@ -12,19 +12,18 @@ export default class Query extends Node {
   async onInput(msg, send, done) {
     if (!this.salesforceConnectionNode) {
       this.error('No connection node configured.', msg);
-      done(); // Ensure done is called to signal completion
-      return; // Exit the function early
+      done();
+      return;
     }
     let connection = await this.salesforceConnectionNode.getConnection();
 
     if (!connection) {
       this.error('Failed to establish a connection to Salesforce', msg);
-      done(); // Ensure done is called to signal completion
-      return; // Exit the function early
+      done();
+      return;
     }
 
     let query = this.config.query;
-    // use msg query if SOQL, otherwise use node query
     if (
       typeof msg.payload === 'string' &&
       msg.payload.trim().toLowerCase().startsWith('select')
@@ -32,10 +31,8 @@ export default class Query extends Node {
       query = msg.payload;
     }
 
-    // set the query to the message for later reference in a flow
     msg.query = query;
 
-    // Output Style "messageAllRecords" do Query and return records
     if (this.config.outputStyle == 'messageAllRecords') {
       try {
         let result = await connection.query(query);
@@ -52,24 +49,17 @@ export default class Query extends Node {
       }
     }
 
-    // Output Style "messagePerRecord" do Query and return records
     if (this.config.outputStyle == 'messagePerRecord') {
       try {
-        // Start the query and set up the stream handlers
         let stream = connection
           .query(query)
           .on('record', async (record) => {
-            let newMsg = Query.RED.util.cloneMessage(msg); // Clone the message for each record
+            let newMsg = Query.RED.util.cloneMessage(msg);
             newMsg = {
               totalSize: stream.totalSize,
               totalFetched: stream.totalFetched,
               payload: record,
             };
-            // delay between emitting each record in ms, set in node config
-            // setTimeout(() => {
-            //   send(newMsg);
-            // }, this.config.delay);
-            // await new Promise(resolve => setTimeout(resolve, this.config.delay));
             send(newMsg);
           })
           .on('end', () => {
@@ -83,7 +73,6 @@ export default class Query extends Node {
               totalFetched: stream.totalFetched,
               payload: 'Done',
             };
-            // Output endmessage in stream or in seperate output node or null (none, no endmessage)
             send(
               this.config.endMessage == 'inNodeOutput'
                 ? [null, endMsg]
@@ -91,13 +80,13 @@ export default class Query extends Node {
                   ? endMsg
                   : null,
             );
-            done(); // Call done only when the stream ends
+            done();
           })
           .on('error', (err) => {
             this.error('Error during Salesforce query stream: ' + err, msg);
-            done(); // Ensure done is also called on error
+            done();
           })
-          .run({ autoFetch: true, maxFetch: this.config.maxFetch }); // This actually starts the query stream
+          .run({ autoFetch: true, maxFetch: this.config.maxFetch });
       } catch (error) {
         this.error(
           'Error setting up Salesforce query stream: ' + error.message,
@@ -105,7 +94,7 @@ export default class Query extends Node {
         );
         done();
       }
-      done(); // Ensure done is always called to signal the end of processing
+      done();
     }
   }
 }

@@ -1,0 +1,8 @@
+{
+  "label": "Consulta",
+  "inputs": {
+    "name": "Nome",
+    "connection": "Conexão",
+    "soqlQuery": "Consulta SOQL"
+  }
+}
