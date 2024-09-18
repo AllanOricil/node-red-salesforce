@@ -7,6 +7,9 @@
     "username": "Benutzername",
     "password": "Passwort",
     "connectedAppClientId": "Kunden-ID",
-    "connectedAppClientSecret": "Kundengeheimnis"
+    "connectedAppClientSecret": "Kundengeheimnis",
+    "placeholders": {
+      "instanceUrl": "Digite uma URL da Organização válida"
+    }
   }
 }

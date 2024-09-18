@@ -7,6 +7,9 @@
     "username": "Username",
     "password": "Password",
     "connectedAppClientId": "Client Id",
-    "connectedAppClientSecret": "Client Secret"
+    "connectedAppClientSecret": "Client Secret",
+    "placeholders": {
+      "instanceUrl": "type in a valid org url"
+    }
   }
 }
