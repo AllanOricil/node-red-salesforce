@@ -39,7 +39,7 @@
     "start:prod": "nrg dev -o -d -e prod",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "format": "prettier **/*.{js,json,html} --ignore-unknown",
+    "format": "prettier **/*.{js,json,html} --ignore-unknown --check",
     "format:fix": "prettier **/*.{js,json,html} --write --ignore-unknown",
     "prepare": "husky",
     "release": "semantic-release"
@@ -77,7 +77,7 @@
   "lint-staged": {
     "**/*.{json, html}": "prettier --write --ignore-unknown",
     "**/*.{js}": [
-      "prettier --write --ignore-unknown",
+      "prettier --write --ignore-unknown --check",
       "eslint --fix"
     ]
   }
