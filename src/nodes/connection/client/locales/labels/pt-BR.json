@@ -1,0 +1,15 @@
+{
+  "label": "Conexão",
+  "inputs": {
+    "name": "Nome",
+    "apiVersion": "Versão API",
+    "instanceUrl": "URL da Organizaçåo",
+    "username": "Nome de Usuário",
+    "password": "Senha",
+    "connectedAppClientId": "Id do Cliente",
+    "connectedAppClientSecret": "Segredo do Cliente",
+    "placeholders": {
+      "instanceUrl": "Digite uma URL da Organização válida"
+    }
+  }
+}

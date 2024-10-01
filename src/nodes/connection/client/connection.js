@@ -8,7 +8,7 @@ function setConnectionResult(message, color) {
   testConnectionResult.style.color = color;
 }
 
-export function testConnection(nodeId) {
+export function test(nodeId) {
   console.log(
     `Button clicked - Test Salesforce connection for node Id: ${nodeId}`,
   );
@@ -16,13 +16,12 @@ export function testConnection(nodeId) {
     id: nodeId,
     username: document.getElementById('node-config-input-username').value,
     password: document.getElementById('node-config-input-password').value,
-    instance_url: document.getElementById('node-config-input-instance_url')
-      .value,
-    connected_app_client_id: document.getElementById(
-      'node-config-input-connected_app_client_id',
+    instanceUrl: document.getElementById('node-config-input-instanceUrl').value,
+    connectedAppClientId: document.getElementById(
+      'node-config-input-connectedAppClientId',
     ).value,
-    connected_app_client_secret: document.getElementById(
-      'node-config-input-connected_app_client_secret',
+    connectedAppClientSecret: document.getElementById(
+      'node-config-input-connectedAppClientSecret',
     ).value,
   };
   console.table(params);

@@ -4,61 +4,53 @@ import jsforce from 'jsforce';
 export default class Connection extends Node {
   constructor(config) {
     super(config);
-    this.loginUrl = config?.instance_url || 'https://login.salesforce.com';
-    this.connection = null; // Connection stored here
+    this.loginUrl = config?.instanceUrl || 'https://login.salesforce.com';
+    this.connection = null;
   }
 
   static init() {
-    // receive "test connection' button click from editor in UI"
-    this.RED.httpAdmin.post(
-      '/salesforce/connection/test',
-      async function (req, res) {
-        try {
-          const salesforceConnectionNode = this.RED.nodes.getNode(req.body.id);
-          //! Needs refactoring? This below doesn't allow changing loginURL and validating the changed values?
-          //! beter to pass complete field object to the main function?
-          if (
-            salesforceConnectionNode?.loginUrl &&
-            salesforceConnectionNode?.credentials?.connected_app_client_id &&
-            salesforceConnectionNode?.credentials?.connected_app_client_secret
-          ) {
-            this.RED.log.info(
-              `using deployed salesforce connection node: ${salesforceConnectionNode.name || salesforceConnectionNode.id}`,
-            );
-            await salesforceConnectionNode.getConnection();
-          } else {
-            // TODO: add ajv to validate req body
-            const connection = new jsforce.Connection({
-              oauth2: {
-                loginUrl: req.body.instance_url,
-                clientId: req.body.connected_app_client_id,
-                clientSecret: req.body.connected_app_client_secret,
-              },
-            });
+    this.RED.httpAdmin.post('/salesforce/connection/test', async (req, res) => {
+      try {
+        const salesforceConnectionNode = this.RED.nodes.getNode(req.body.id);
+        if (
+          salesforceConnectionNode?.loginUrl &&
+          salesforceConnectionNode?.credentials?.connectedAppClientId &&
+          salesforceConnectionNode?.credentials?.connectedAppClientSecret
+        ) {
+          this.RED.log.info(
+            `using deployed salesforce connection node: ${salesforceConnectionNode.name || salesforceConnectionNode.id}`,
+          );
+          await salesforceConnectionNode.getConnection();
+        } else {
+          // TODO: add ajv to validate req body
+          const connection = new jsforce.Connection({
+            oauth2: {
+              loginUrl: req.body.instanceUrl,
+              clientId: req.body.connectedAppClientId,
+              clientSecret: req.body.connectedAppClientSecret,
+            },
+          });
 
-            await connection.login(req.body.username, req.body.password);
-          }
-        } catch (err) {
-          this.RED.log.error('Salesforce connection failed: ' + err.message);
-          return res
-            .status(500)
-            .json({ status: 'error', message: err.message });
+          await connection.login(req.body.username, req.body.password);
         }
+      } catch (err) {
+        this.RED.log.error('Salesforce connection failed: ' + err.message);
+        return res.status(500).json({ status: 'error', message: err.message });
+      }
 
-        this.RED.log.info('Salesforce connection successful!');
-        res
-          .status(200)
-          .json({ status: 'success', message: 'Connection successful' });
-      },
-    );
+      this.RED.log.info('Salesforce connection successful!');
+      res
+        .status(200)
+        .json({ status: 'success', message: 'Connection successful' });
+    });
   }
 
   static credentials() {
     return {
       username: { type: 'text', required: true },
       password: { type: 'password', required: true },
-      connected_app_client_id: { type: 'password', required: true },
-      connected_app_client_secret: { type: 'password', required: true },
+      connectedAppClientId: { type: 'password', required: true },
+      connectedAppClientSecret: { type: 'password', required: true },
     };
   }
 
@@ -67,8 +59,8 @@ export default class Connection extends Node {
       const connection = new jsforce.Connection({
         oauth2: {
           loginUrl: this.loginUrl,
-          clientId: this.credentials.connected_app_client_id,
-          clientSecret: this.credentials.connected_app_client_secret,
+          clientId: this.credentials.connectedAppClientId,
+          clientSecret: this.credentials.connectedAppClientSecret,
         },
       });
       await connection.login(

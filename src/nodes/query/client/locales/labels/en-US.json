@@ -1,0 +1,8 @@
+{
+  "label": "Query",
+  "inputs": {
+    "name": "Name",
+    "connection": "Conection",
+    "soqlQuery": "SOQL Query"
+  }
+}
