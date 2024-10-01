@@ -9,7 +9,7 @@
     "connectedAppClientId": "Kunden-ID",
     "connectedAppClientSecret": "Kundengeheimnis",
     "placeholders": {
-      "instanceUrl": "Digite uma URL da Organização válida"
+      "instanceUrl": "Geben Sie eine gültige Organisations-URL ein"
     }
   }
 }
