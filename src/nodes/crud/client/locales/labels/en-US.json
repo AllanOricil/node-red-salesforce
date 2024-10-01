@@ -2,6 +2,6 @@
   "label": "CRUD",
   "inputs": {
     "name": "Name",
-    "connection": "Verbindung"
+    "connection": "Connection"
   }
 }
