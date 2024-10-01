@@ -45,6 +45,7 @@
     "release": "semantic-release"
   },
   "node-red": {
+    "version": ">=3.1",
     "nodes": {
       "salesforce": "dist/index.js"
     }
@@ -54,7 +55,7 @@
     "jsforce": "^1.11.1"
   },
   "devDependencies": {
-    "@allanoricil/nrg-cli": "^1.1.0",
+    "@allanoricil/nrg-cli": "^1.2.4",
     "@commitlint/cli": "^19.2.2",
     "@commitlint/config-conventional": "^19.2.2",
     "@semantic-release/changelog": "^6.0.3",
