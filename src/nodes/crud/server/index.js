@@ -1,4 +1,4 @@
-import { Node } from '@allanoricil/node-red-node';
+import { Node } from '@allanoricil/nrg-nodes';
 import { isValidSalesforceId } from '../../../utils/utils';
 
 export default class Crud extends Node {

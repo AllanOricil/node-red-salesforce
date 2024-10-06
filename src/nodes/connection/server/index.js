@@ -1,4 +1,4 @@
-import { Node } from '@allanoricil/node-red-node';
+import { Node } from '@allanoricil/nrg-nodes';
 import jsforce from 'jsforce';
 
 export default class Connection extends Node {
