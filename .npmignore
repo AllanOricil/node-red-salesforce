@@ -15,3 +15,4 @@ commitlint.config.js
 esbuild.config.js
 docker-compose.yml
 node-red
+docs

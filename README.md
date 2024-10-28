@@ -6,3 +6,5 @@
 # node-red-salesforce
 
 A collection of [Node-RED](https://github.com/node-red/node-red) nodes for seamless integration with Salesforce, powered by [JSForce](https://github.com/jsforce/jsforce) for efficient interaction with Salesforce APIs and data.
+
+![nodes](../main/docs/nodes.png?raw=true)
