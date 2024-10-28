@@ -1,65 +1,64 @@
 <template>
   <div class="form-row">
-    <label for:="name">
+    <label for="node-config-input-name">
       <i class="fa fa-id-card-o"></i>
-      <span i18n:="inputs.name">Name</span>
+      <span data-i18n="connection.inputs.name">Name</span>
     </label>
-    <input type="text" id:="name" />
+    <input type="text" id="node-config-input-name" />
   </div>
 
   <div class="form-row">
-    <label for:="instanceUrl">
+    <label for="node-config-input-instanceUrl">
       <i class="fa fa-laptop"></i>
-      <span i18n:="inputs.instanceUrl">Instance URL
-      </span>
+      <span data-i18n="connection.inputs.instanceUrl">Instance URL</span>
     </label>
-    <input type="text" id:="instanceUrl" i18n:placeholder="inputs.placeholders.instanceUrl"/>
+    <input type="text" id="node-config-input-instanceUrl" data-i18n="[placeholder]connection.inputs.placeholders.instanceUrl"/>
   </div>
 
   <div class="form-row">
-    <label for:="username">
+    <label for="node-config-input-username">
       <i class="fa fa-user"></i>
-      <span i18n:="inputs.username">Username</span>
+      <span data-i18n="connection.inputs.username">Username</span>
     </label>
-    <input type="text" id:="username" />
+    <input type="text" id="node-config-input-username" />
   </div>
 
   <div class="form-row">
-    <label for:="password">
+    <label for="node-config-input-password">
       <i class="fa fa-key"></i>
-      <span i18n:="inputs.password">Password</span>
+      <span data-i18n="connection.inputs.password">Password</span>
     </label>
-    <input type="password" id:="password" />
+    <input type="password" id="node-config-input-password" />
   </div>
 
   <div class="form-row">
-    <label for:="connectedAppClientId">
+    <label for="node-config-input-connectedAppClientId">
       <i class="fa fa-sitemap"></i>
-      <span i18n:="inputs.connectedAppClientId">
+      <span data-i18n="connection.inputs.connectedAppClientId">
         Client ID
       </span>
     </label>
-    <input type="password" id:="connectedAppClientId" />
+    <input type="password" id="node-config-input-connectedAppClientId" />
   </div>
 
   <div class="form-row">
-    <label for:="connectedAppClientSecret">
+    <label for="node-config-input-connectedAppClientSecret">
       <i class="fa fa-sitemap"></i>
-      <span i18n:="inputs.connectedAppClientSecret">
+      <span data-i18n="connection.inputs.connectedAppClientSecret">
         Client Secret
       </span>
     </label>
-    <input type="password" id:="connectedAppClientSecret" />
+    <input type="password" id="node-config-input-connectedAppClientSecret" />
   </div>
 
   <div class="form-row">
-    <label for:="apiVersion">
+    <label for="node-config-input-apiVersion">
       <i class="fa fa-gear"></i>
-      <span i18n:="inputs.apiVersion">
+      <span data-i18n="connection.inputs.apiVersion">
         API Version
       </span>
     </label>
-    <select type="text" id:="apiVersion">
+    <select type="text" id="node-config-input-apiVersion">
       <option value="60.0">v60.0</option>
       <option value="59.0">v59.0</option>
       <option value="58.0">v58.0</option>
