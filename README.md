@@ -8,3 +8,24 @@
 A collection of [Node-RED](https://github.com/node-red/node-red) nodes for seamless integration with Salesforce, powered by [JSForce](https://github.com/jsforce/jsforce) for efficient interaction with Salesforce APIs and data.
 
 ![nodes](../main/docs/nodes.png?raw=true)
+
+## 💻 Dev Environment
+
+| Name | Version |
+| ---- | ------- |
+| node | >= 20   |
+| npm  | >= 10   |
+
+## 📖 How to test your node
+
+1. open a terminal in the root of this project
+2. run `npm install`
+3. run `npm run start` and wait for your browser to open
+
+## 🔌 Nodes
+
+| Name       | Description                                                                      |
+| ---------- | -------------------------------------------------------------------------------- |
+| connection | Used to configure a safe connection to Salesforce                                |
+| crud       | Used to perform Create, Read, Update and Delete operations in Salesforce Records |
+| query      | Used to fetch data from Salesforce                                               |
