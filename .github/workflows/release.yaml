@@ -2,6 +2,14 @@ name: Release
 on:
   workflow_dispatch:
 
+permissions:
+  packages: write
+  pull-requests: write
+  contents: write
+  issues: write
+  id-token: write
+  attestations: write
+
 jobs:
   release:
     name: Release
@@ -10,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4.0.1
@@ -18,7 +28,7 @@ jobs:
           cache: npm
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Format
         run: npm run format
@@ -33,7 +43,7 @@ jobs:
         run: npm run build
 
       - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v4.1.1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
