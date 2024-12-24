@@ -1,0 +1,129 @@
+<p>Cria uma planilha usando um modelo</p>
+
+<h3>Entradas</h3>
+<dl class="message-properties">
+  <dt class="required">
+    payload
+    <span class="property-type">array de objetos</span>
+  </dt>
+  <dd>
+    os dados usados para criar as linhas. Cada objeto no array representa uma
+    linha da planilha. E cada chave do objeto corresponde a uma coluna da
+    planilha.
+  </dd>
+
+  <dt class="optional">
+    dados
+    <span class="property-type">string</span>
+  </dt>
+  <dd>
+    O campo utilizado para definir os dados usados para renderizar a planilha.
+    Quando
+    <code>msg.data</code>
+    não existe, os valores das linhas vêm de
+    <code>msg.payload</code>
+    . O valor definido usando
+    <code>msg.data</code>
+    tem precedência sobre o valor definido no formulário de propriedades do nó e
+    <code>msg.payload</code>
+    .
+  </dd>
+
+  <dt class="optional">
+    templateFilepath
+    <span class="property-type">string</span>
+  </dt>
+  <dd>
+    o caminho local para um arquivo de modelo
+    <code>.xlsx | .xls</code>
+    . O valor definido usando
+    <code>msg.templateFilepath</code>
+    tem precedência sobre o valor definido no formulário de propriedades do nó.
+  </dd>
+
+  <dt class="optional">
+    templateSheetName
+    <span class="property-type">string</span>
+  </dt>
+  <dd>
+    o nome da planilha a ser usada a partir do modelo. O valor definido usando
+    <code>msg.templateSheetName</code>
+    tem precedência sobre o valor definido no formulário de propriedades do nó.
+  </dd>
+
+  <dt class="optional">
+    outputFilepath
+    <span class="property-type">string</span>
+  </dt>
+  <dd>
+    o caminho local para armazenar o arquivo gerado
+    <code>.xlsx | .xls</code>
+    . O valor definido usando
+    <code>msg.outputFilepath</code>
+    tem precedência sobre o valor definido no formulário de propriedades do nó.
+  </dd>
+</dl>
+
+<h3>Saídas</h3>
+<ol class="node-ports">
+  <li>
+    Caminho do Arquivo de Saída
+    <dl class="message-properties">
+      <dt>
+        payload
+        <span class="property-type">string</span>
+      </dt>
+      <dd>o caminho onde o arquivo gerado foi salvo.</dd>
+    </dl>
+  </li>
+</ol>
+
+<h3>Detalhes</h3>
+
+<p>
+  O exemplo a seguir demonstra o payload a ser enviado para o nó. Cada objeto
+  dentro do array corresponde a uma linha, e se uma coluna estiver vazia, você
+  deve passar uma string vazia.
+</p>
+
+<pre><code>
+msg.payload = [ 
+    { 
+        "column-1" : "valor", 
+        "column-2" : "valor", 
+        "column-3" : "valor" 
+    },
+    { 
+        "column-1" : "valor", 
+        "column-2" : "", 
+        "column-3" : "valor" 
+    }
+]
+</code></pre>
+
+<p>
+  Se você precisar sobrescrever qualquer uma das propriedades do nó, basta
+  defini-las no
+  <code>msg</code>
+  conforme mostrado abaixo.
+</p>
+
+<pre><code>
+msg = {
+    "payload": [
+        { 
+            "column-1" : "valor", 
+            "column-2" : "valor", 
+            "column-3" : "valor" 
+        },
+        { 
+            "column-1" : "valor", 
+            "column-2" : "", 
+            "column-3" : "valor" 
+        }
+    ],
+    "templateFilepath": "meu-modelo.xlsx",
+    "templateSheetName": "nome da minha planilha",
+    "outputFilepath": "saida.xlsx"
+}
+</code></pre>
