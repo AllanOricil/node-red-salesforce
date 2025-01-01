@@ -1,7 +1,7 @@
 {
   "name": "node-red-salesforce",
   "version": "0.0.0",
-  "description": "A set of Node-RED nodes to interact with Salesforce services",
+  "description": "A collection of Node-RED nodes to integrate with Salesforce",
   "author": {
     "name": "Allan Oricil",
     "email": "allanoricil@duck.com"
@@ -14,14 +14,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/salesforce-flowpro/node-red-salesforce.git"
+    "url": "https://github.com/AllanOricil/node-red-salesforce.git"
   },
   "keywords": [
     "node-red",
     "nrg",
     "salesforce",
     "jsforce",
-    "salesforce-flow-pro"
   ],
   "engines": {
     "node": ">=20",
