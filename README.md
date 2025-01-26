@@ -5,6 +5,9 @@
 
 # node-red-salesforce
 
+> [!IMPORTANT]
+> don't use it. It was a poc and the code is horrible. I'm trying to bind the client context with a Vue 3 because I refuse to write jquery and plain js in the client.
+
 A collection of [Node-RED](https://github.com/node-red/node-red) nodes for seamless integration with Salesforce, powered by [JSForce](https://github.com/jsforce/jsforce) for efficient interaction with Salesforce APIs and data.
 
 ![nodes](../main/docs/nodes.png?raw=true)
@@ -24,8 +27,8 @@ A collection of [Node-RED](https://github.com/node-red/node-red) nodes for seaml
 
 ## 🔌 Nodes
 
-| Name       | Description                                                                      |
-| ---------- | -------------------------------------------------------------------------------- |
-| connection | Used to configure a safe connection to Salesforce                                |
-| crud       | Used to perform Create, Read, Update and Delete operations in Salesforce Records |
-| query      | Used to fetch data from Salesforce                                               |
+| Name       | Description                                                              |
+| ---------- | ------------------------------------------------------------------------ |
+| connection | Configure a connection to Salesforce                                     |
+| crud       | Perform Create, Read, Update and Delete operations in Salesforce Records |
+| query      | fetch data from Salesforce                                               |
