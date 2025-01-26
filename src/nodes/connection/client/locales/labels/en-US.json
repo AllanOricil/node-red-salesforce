@@ -11,5 +11,9 @@
     "placeholders": {
       "instanceUrl": "type in a valid org url"
     }
+  },
+  "messages": {
+    "successfulConnection": "Connection Succeeded",
+    "failedConnection": "Connection Failed"
   }
 }

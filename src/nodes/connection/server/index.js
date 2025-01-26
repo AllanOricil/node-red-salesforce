@@ -2,47 +2,51 @@ import { Node } from '@allanoricil/nrg-nodes';
 import jsforce from 'jsforce';
 
 export default class Connection extends Node {
+  #connection;
+
   constructor(config) {
     super(config);
     this.loginUrl = config?.instanceUrl || 'https://login.salesforce.com';
-    this.connection = null;
+    this.#connection = null;
   }
 
   static init() {
-    this.RED.httpAdmin.post('/salesforce/connection/test', async (req, res) => {
-      try {
-        const salesforceConnectionNode = this.RED.nodes.getNode(req.body.id);
-        if (
-          salesforceConnectionNode?.loginUrl &&
-          salesforceConnectionNode?.credentials?.connectedAppClientId &&
-          salesforceConnectionNode?.credentials?.connectedAppClientSecret
-        ) {
-          this.RED.log.info(
-            `using deployed salesforce connection node: ${salesforceConnectionNode.name || salesforceConnectionNode.id}`,
+    this.RED.httpAdmin.post(
+      '/api/v1/salesforce/connection/test',
+      async (req, res) => {
+        try {
+          const salesforceConnectionNode = this.RED.nodes.getNode(
+            req.body.nodeId,
           );
-          await salesforceConnectionNode.getConnection();
-        } else {
-          // TODO: add ajv to validate req body
-          const connection = new jsforce.Connection({
-            oauth2: {
-              loginUrl: req.body.instanceUrl,
-              clientId: req.body.connectedAppClientId,
-              clientSecret: req.body.connectedAppClientSecret,
-            },
-          });
-
-          await connection.login(req.body.username, req.body.password);
+          if (
+            salesforceConnectionNode?.loginUrl &&
+            salesforceConnectionNode?.credentials?.connectedAppClientId &&
+            salesforceConnectionNode?.credentials?.connectedAppClientSecret
+          ) {
+            this.RED.log.info(
+              `using deployed salesforce connection node: ${salesforceConnectionNode.name || salesforceConnectionNode.id}`,
+            );
+            await salesforceConnectionNode.getConnection();
+          } else {
+            // TODO: validate req body before calling this
+            await Connection.#createConnection(
+              req.body.instanceUrl,
+              req.body.connectedAppClientId,
+              req.body.connectedAppClientSecret,
+              req.body.username,
+              req.body.password,
+            );
+          }
+        } catch (err) {
+          this.RED.log.error('salesforce connection failed: ' + err.message);
+          // TODO: add error_code so that the client can handle it
+          return res.status(500).json({ message: 'connection failed' });
         }
-      } catch (err) {
-        this.RED.log.error('Salesforce connection failed: ' + err.message);
-        return res.status(500).json({ status: 'error', message: err.message });
-      }
 
-      this.RED.log.info('Salesforce connection successful!');
-      res
-        .status(200)
-        .json({ status: 'success', message: 'Connection successful' });
-    });
+        this.RED.log.info('salesforce connection created');
+        res.status(200).json({ message: 'connection succeeded' });
+      },
+    );
   }
 
   static credentials() {
@@ -54,42 +58,51 @@ export default class Connection extends Node {
     };
   }
 
-  async #createConnection() {
+  static async #createConnection(
+    loginUrl,
+    clientId,
+    clientSecret,
+    username,
+    password,
+  ) {
     try {
       const connection = new jsforce.Connection({
         oauth2: {
-          loginUrl: this.loginUrl,
-          clientId: this.credentials.connectedAppClientId,
-          clientSecret: this.credentials.connectedAppClientSecret,
+          loginUrl,
+          clientId,
+          clientSecret,
         },
       });
-      await connection.login(
-        this.credentials.username,
-        this.credentials.password,
-      );
+      await connection.login(clientSecret, password);
 
-      this.log('accessToken:' + connection.accessToken);
-      this.log('refreshToken:' + connection.refreshToken);
-      this.log('instanceUrl:' + connection.instanceUrl);
-      this.log('userId:' + connection.userInfo.id);
-      this.log('orgId:' + connection.userInfo.organizationId);
+      this.debug('accessToken:' + connection.accessToken);
+      this.debug('refreshToken:' + connection.refreshToken);
+      this.debug('instanceUrl:' + connection.instanceUrl);
+      this.debug('userId:' + connection.userInfo.id);
+      this.debug('orgId:' + connection.userInfo.organizationId);
 
       return connection;
     } catch (err) {
-      this.error(`Error while creating new connection: ${err.message}`);
+      this.error(`error while creating new connection: ${err.message}`);
+      throw err;
     }
   }
 
-  // TODO: pass several parameters to this guy to determine the type of connection it can open
   async getConnection() {
-    if (this.connection) {
+    if (this.#connection) {
       this.log('returning cached connection');
-      return this.connection;
+      return this.#connection;
     }
 
     this.log('creating new connection');
-    this.connection = await this.#createConnection();
+    this.#connection = await Connection.#createConnection(
+      this.loginUrl,
+      this.credentials.connectedAppClientId,
+      this.credentials.connectedAppClientSecret,
+      this.credentials.username,
+      this.credentials.password,
+    );
 
-    return this.connection;
+    return this.#connection;
   }
 }

@@ -1,4 +1,4 @@
-import * as connection from './connection';
+import { onClick } from './handlers';
 
 export default {
   category: 'config',
@@ -17,11 +17,11 @@ export default {
   label: function () {
     return this.name || this.instanceUrl || this._('connection.label');
   },
+  // TODO: find a way to generate the form of the node based on a vue 3 component
   oneditprepare: function () {
-    const nodeId = this.id;
     const testConnectionButton = document.getElementById(
       'test-connection-button',
     );
-    testConnectionButton.onclick = () => connection.test(nodeId);
+    testConnectionButton.onclick = onClick.bind(this);
   },
 };

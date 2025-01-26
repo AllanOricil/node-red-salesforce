@@ -6,7 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@nodes/*": ["./src/nodes/*"]
+      "@nodes/*": ["./src/nodes/*"],
+      "@services/*": ["src/nodes/connection/client/services/*"]
     }
   },
   "include": ["src/**/*"]

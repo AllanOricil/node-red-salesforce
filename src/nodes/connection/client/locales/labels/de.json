@@ -11,5 +11,9 @@
     "placeholders": {
       "instanceUrl": "Geben Sie eine gültige Organisations-URL ein"
     }
+  },
+  "messages": {
+    "successfulConnection": "Verbindung Erfolgreich",
+    "failedConnection": "Verbindung Fehlgeschlagen"
   }
 }

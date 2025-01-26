@@ -1,5 +1,5 @@
 import { Node } from '@allanoricil/nrg-nodes';
-import { isValidSalesforceId } from '../../../utils/utils';
+import { isValidSalesforceId } from './utils';
 
 export default class Crud extends Node {
   constructor(config) {
