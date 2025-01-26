@@ -20,7 +20,7 @@
     "node-red",
     "nrg",
     "salesforce",
-    "jsforce",
+    "jsforce"
   ],
   "engines": {
     "node": ">=20",
